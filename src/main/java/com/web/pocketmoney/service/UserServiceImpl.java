@@ -1,16 +1,25 @@
 package com.web.pocketmoney.service;
 
+import com.web.pocketmoney.config.security.JwtTokenProvider;
+import com.web.pocketmoney.dto.user.LoginDTO;
+import com.web.pocketmoney.dto.user.SignupUserDTO;
+import com.web.pocketmoney.dto.user.TokenUserDTO;
 import com.web.pocketmoney.dto.user.UserDTO;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.entity.user.UserRepository;
+import com.web.pocketmoney.exception.CEmailSignupFailedException;
+import com.web.pocketmoney.exception.CNickNameSignupFailedException;
+import com.web.pocketmoney.exception.CSigninFailedException;
+import com.web.pocketmoney.model.SingleResult;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,12 +27,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService{
 
     private final UserRepository userRepository;
-
-    @Autowired
-    private BCryptPasswordEncoder encoder;
+    private final JwtTokenProvider jwtTokenProvider; // jwt 토큰 생성
+    private final ResponseService responseService; // API 요청 결과에 대한 code, message
+    private final PasswordEncoder encoder; // 비밀번호 암호화
 
     //회원 정보 조회
-    public UserDTO getUser(Long id){
+  /*  public UserDTO getUser(Long id){
         Object result = userRepository.getUserById(id);
         Object[] arr = (Object[])result;
         User entity = (User)arr[0];
@@ -64,43 +73,62 @@ public class UserServiceImpl implements UserService{
     @Override
     public void delete(User user) {
         userRepository.delete(user);
+    } */
+
+
+    public SingleResult<TokenUserDTO> login(LoginDTO loginDTO) {
+        String email = loginDTO.getEmail();
+        String password = loginDTO.getPassword();
+
+        log.info("id : {}" , email);
+        log.info("password : {}" , password);
+
+        User user = userRepository.findByEmail(email).orElseThrow(CSigninFailedException::new);
+        log.info(user.toString());
+        if (!encoder.matches(password, user.getPassword())) {
+            log.info("비밀번호 다름");
+            // matches : 평문, 암호문 패스워드 비교 후 boolean 결과 return
+            throw new CSigninFailedException();
+        }
+    /*    if(user.get() == false){
+            throw new CEmailAuthTokenNotFoundException();
+        }*/
+        log.info("아아아아아아앙아");
+        return responseService.getSingleResult(
+                TokenUserDTO.builder()
+                        .token(jwtTokenProvider.createToken(String.valueOf(user.getId()), user.getRoles()))
+                        .userId(user.getId())
+                        .nickName(user.getNickName())
+                        .build()
+        );
     }
 
-    public User save(User user) {
-        validateDuplicateUserEmail(user);
-        validateDuplicateUserNickName(user);
-        userRepository.save(user);
-        return user;
-    }
-
-    public User login(String email, String password) {
-        System.out.println("loginService : " + email + " password : " + password );
-        List<User> findEmails = userRepository.findByEmail(email);
-        if(findEmails.isEmpty()) {
-            System.out.println(email + " : " );
-            throw new IllegalStateException("존재하지 않는 회원 아이디 입니다");
+    @Transactional
+    public void signup(SignupUserDTO signupUserDTO) {
+        log.info(signupUserDTO.toString());
+        String email = signupUserDTO.getEmail();
+        String nickName = signupUserDTO.getNickName();
+        log.info(email + " " + nickName);
+        User user1 = userRepository.findByEmail(email).orElse(null);
+        User user2 = userRepository.findByNickName(nickName).orElse(null);
+        if(user1 != null) {
+            log.error(user1.toString());
+            throw new CEmailSignupFailedException();
         }
-        User user = findEmails.get(0);
-        System.out.println(user.toString());
-        if(!user.getPassword().equals(password)) {
-            throw new IllegalStateException("비밀번호가 다릅니다.");
+        if(user2 != null) {
+            throw new CNickNameSignupFailedException();
         }
-        return user;
-    }
-
-    private void validateDuplicateUserEmail(User user) {
-        List<User> findEmails = userRepository.findByEmail(user.getEmail());
-        if(!findEmails.isEmpty()) {
-            System.out.println(user.getEmail() + " : ");
-            throw new IllegalStateException("이미 존재하는 아이디 입니다.");
-        }
-    }
-
-    private void validateDuplicateUserNickName(User user) {
-        List<User> findNickNames = userRepository.findByNickName(user.getNickName());
-        if (!findNickNames.isEmpty()) {
-            System.out.println(user.getNickName() + " : ");
-            throw new IllegalStateException("이미 존재하는 닉네임 입니다.");
-        }
+        userRepository.save(User.builder()
+                .userName(signupUserDTO.getUserName())
+                .nickName(signupUserDTO.getNickName())
+                .password(encoder.encode(signupUserDTO.getPassword()))
+                .email(signupUserDTO.getEmail())
+                .age(signupUserDTO.getAge())
+                .city(signupUserDTO.getCity())
+                .sex(signupUserDTO.getSex())
+                .roles(Collections.singletonList("ROLE_USER"))
+                .kindScore(0L)
+                .build()
+        );
     }
 }
