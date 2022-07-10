@@ -1,16 +1,5 @@
 package com.web.pocketmoney.entity.rooms;
 
-import com.web.pocketmoney.entity.room.ChatRoom;
-import com.web.pocketmoney.entity.user.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
-import javax.persistence.*;
-
-@Entity
-@Getter @Setter
-@NoArgsConstructor
 public class Rooms {
     /*
     @Id
