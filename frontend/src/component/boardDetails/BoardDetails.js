@@ -8,6 +8,7 @@ import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 import deleteBoardApi from "../../api/board/DeleteBoardApi";
 import findCommentApi from "./../../api/comment/FindCommentApi";
 import CommentWrite from "./CommentWrite";
+import createRoomApi from "./../../api/chat/CreateRoomApi";
 
 const Outside = styled.div`
   width: 1050px;
@@ -70,15 +71,18 @@ const ContentImg = styled.div`
 const BoardDetails = () => {
   const navigate = useNavigate();
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
-  const match = () => {
-    alert("매칭테스트 성공");
-  };
+
   const params = useParams();
   const boardId = params.boardId;
   const [data, setDate] = useState();
 
   const [commentPage, setCommentPage] = useState(1);
   const [comments, setComments] = useState();
+
+  const match = () => {
+    createRoomApi(boardId, data.title, accesstoken);
+    navigate("/chat");
+  };
 
   useEffect(() => {
     findBoardApi(accesstoken, boardId, navigate).then((dataPromise) => {

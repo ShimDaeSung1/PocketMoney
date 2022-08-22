@@ -3,6 +3,7 @@ import styled from "styled-components";
 import CancelButton from "../CancelButton";
 import ChattingRoom from "./ChattingRoom";
 import { useNavigate } from "react-router";
+import SockJS from "sockjs-client";
 
 const Outside = styled.div`
   width: 1050px;
@@ -19,6 +20,7 @@ const Block = styled.div`
 
 function ChatPage() {
   const navigate = useNavigate();
+  // const sockJs = new SockJS("/stomp/chat");
   return (
     <Outside>
       <CancelButton navigate={navigate} />
