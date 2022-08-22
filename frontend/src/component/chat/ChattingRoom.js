@@ -9,10 +9,10 @@ const Outside = styled.div`
   border-bottom: 5px solid blue;
 `;
 
-function ChattingRoom() {
+function ChattingRoom(props) {
   return (
     <Outside>
-      <AllMessage />
+      <AllMessage roomList={props.roomList} />
       <DefaultRoom />
     </Outside>
   );

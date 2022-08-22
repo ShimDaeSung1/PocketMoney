@@ -46,7 +46,7 @@ const LatestDate = styled.div`
   color: gray;
   font-size: 15px;
 `;
-function AllMessage() {
+function AllMessage(props) {
   const [sword, setSword] = useState("");
   const search = () => {
     if (!sword.length) {
@@ -83,26 +83,17 @@ function AllMessage() {
           />
         </Serachsubmit>
       </Search>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
+      {props.roomList
+        ? props.roomList.map((room) => {
+            return (
+              <Message>
+                <Title>{room.name}</Title>
+                <User>{room.nickName}</User>
+                <LatestDate>{room.regDate}</LatestDate>
+              </Message>
+            );
+          })
+        : ""}
     </Outside>
   );
 }
