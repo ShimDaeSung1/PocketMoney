@@ -1,5 +1,7 @@
 import React from "react";
 import styled from "styled-components";
+import deleteUserApi from "./../../api/user/deleteUserApi";
+import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   position: relative;
@@ -46,7 +48,26 @@ const KindScore = styled.div`
   border-radius: 100px;
   border: 5px solid yellow;
 `;
+const DeleteUser = styled.div`
+  position: absolute;
+  top: 280px;
+  left: 110px;
+  width: 80px;
+  height: 30px;
+  fint-size: 14px;
+  text-align: center;
+  color: gray;
+  cursor: pointer;
+`;
 function SubFuncBox(props) {
+  const onDeleteUserClicked = () => {
+    if (window.confirm("정말 탈퇴하시겠습니까?")) {
+      if (window.confirm("정말정말 탈퇴하시겠습니까?")) {
+        deleteUserApi(sessionStorage.getItem(ACCESS_TOKEN), props.navigate);
+      }
+    }
+  };
+
   return (
     <Outside>
       <ChatButton
@@ -68,6 +89,7 @@ function SubFuncBox(props) {
       <KindScore>
         친절도: {props.userInf ? props.userInf.kindScore : ""}
       </KindScore>
+      <DeleteUser onClick={onDeleteUserClicked}>회원 탈퇴</DeleteUser>
     </Outside>
   );
 }
