@@ -47,6 +47,7 @@ const KindScore = styled.div`
   border: 5px solid yellow;
 `;
 function SubFuncBox(props) {
+  console.log(props.userInf);
   return (
     <Outside>
       <ChatButton
@@ -63,7 +64,9 @@ function SubFuncBox(props) {
       >
         내 정보 수정
       </EditMyInfoButton>
-      <KindScore>친절도: 100</KindScore>
+      <KindScore>
+        친절도: {props.userInf ? props.userInf.kindScore : ""}
+      </KindScore>
     </Outside>
   );
 }

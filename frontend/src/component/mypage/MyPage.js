@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import CancelButton from "./../CancelButton";
 import InfBox from "./InfBox";
 import SubFuncBox from "./SubFuncBox";
+import findUserDetailsApi from "./../../api/user/findUserDetailsApi";
 
 const Outside = styled.div`
   width: 1050px;
@@ -28,6 +29,14 @@ function Mypage() {
     window.location.href = "/login";
   }
   const navigate = useNavigate();
+  const [userInf, setUserInf] = useState();
+
+  useEffect(() => {
+    findUserDetailsApi(sessionStorage.getItem(ACCESS_TOKEN)).then((resp) => {
+      setUserInf(resp);
+    });
+  }, []);
+
   return (
     <Outside>
       <MyInf>
@@ -44,8 +53,8 @@ function Mypage() {
             }}
           />
         </BaseImg>
-        <InfBox />
-        <SubFuncBox navigate={navigate} />
+        <InfBox userInf={userInf} />
+        <SubFuncBox navigate={navigate} userInf={userInf} />
       </MyInf>
     </Outside>
   );
