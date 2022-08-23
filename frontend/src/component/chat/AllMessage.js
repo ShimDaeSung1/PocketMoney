@@ -1,6 +1,8 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState } from "react";
 import styled from "styled-components";
+import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
+import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   display: inline-block;
@@ -47,6 +49,7 @@ const LatestDate = styled.div`
   font-size: 15px;
 `;
 function AllMessage(props) {
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [sword, setSword] = useState("");
   const search = () => {
     if (!sword.length) {
@@ -61,6 +64,12 @@ function AllMessage(props) {
       search();
     }
   };
+
+  function selectOneChatRoom(id) {
+    findChttingRoomApi(id, accesstoken).then((resp) => {
+      props.setChatInf(resp);
+    });
+  }
   return (
     <Outside>
       <Search>
@@ -86,7 +95,7 @@ function AllMessage(props) {
       {props.roomList
         ? props.roomList.map((room) => {
             return (
-              <Message>
+              <Message onClick={() => selectOneChatRoom(room.id)}>
                 <Title>{room.name}</Title>
                 <User>{room.nickName}</User>
                 <LatestDate>{room.regDate}</LatestDate>

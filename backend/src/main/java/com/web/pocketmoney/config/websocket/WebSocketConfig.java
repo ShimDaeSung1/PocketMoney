@@ -42,9 +42,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     //[ws://localhost:8080/stomp/chat]가 된다. WebSocket또는 SockJs는 /stomp/chat와 핸드쉐이크 과정을 통해 커넥션이 연결된다.
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
+
         registry.addEndpoint("/stomp/chat")
-//                .setAllowedOriginPatterns("*")
-                .setAllowedOrigins("http://localhost:8080")
+                .setAllowedOrigins("http://localhost:3000")
                 .withSockJS(); //클라이언트와의 연결은 SockJs()로 하기 때문에 달아줌
     }
 

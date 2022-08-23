@@ -3,7 +3,6 @@ import styled from "styled-components";
 import CancelButton from "../CancelButton";
 import ChattingRoom from "./ChattingRoom";
 import { useNavigate } from "react-router";
-import SockJS from "sockjs-client";
 import findChattingListApi from "./../../api/chat/FindChattingListApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
@@ -24,7 +23,7 @@ function ChatPage() {
   const navigate = useNavigate();
   const [roomList, setRoomList] = useState();
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
-  // const sockJs = new SockJS("/stomp/chat");
+
   useEffect(() => {
     findChattingListApi(accesstoken).then((resp) => {
       setRoomList(resp);
