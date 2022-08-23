@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { ACCESS_TOKEN } from "./../../../constant/LocalStorage";
 import styled from "styled-components";
 import CancelButton from "../../CancelButton";
+import edidUserApi from "./../../../api/user/edidUserApi";
 
 const EditButton = styled.a`
   display: block;
@@ -43,11 +44,13 @@ const EditBox = styled.div`
 `;
 
 function EditMyInfo() {
-  const [nickName, setNickName] = useState("");
-  const [age, setAge] = useState("");
-  const [sex, setSex] = useState("");
+  const { state } = useLocation();
+  const [nickName, setNickName] = useState(state ? state.nickName : "");
+  const [age, setAge] = useState(state ? state.age : "");
+  const [sex, setSex] = useState(state ? state.sex : "");
   const [userName, setUserName] = useState("");
-  if (!sessionStorage.getItem(ACCESS_TOKEN)) {
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
+  if (!accesstoken) {
     alert("로그인이 필요한 서비스입니다!!!");
     window.location.href = "/login";
   }
@@ -98,7 +101,15 @@ function EditMyInfo() {
             document.getElementById("pInput").value &&
             userName.length
           ) {
-            //마이페이지 수정 api
+            edidUserApi(
+              nickName,
+              age,
+              sex,
+              document.getElementById("pInput").value,
+              userName,
+              navigate,
+              accesstoken
+            );
           } else {
             alert("빈칸을 다 채워주세요");
           }

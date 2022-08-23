@@ -47,7 +47,6 @@ const KindScore = styled.div`
   border: 5px solid yellow;
 `;
 function SubFuncBox(props) {
-  console.log(props.userInf);
   return (
     <Outside>
       <ChatButton
@@ -59,7 +58,9 @@ function SubFuncBox(props) {
       </ChatButton>
       <EditMyInfoButton
         onClick={() => {
-          props.navigate("/mypage/edit");
+          props.navigate("/mypage/edit", {
+            state: props.userInf,
+          });
         }}
       >
         내 정보 수정
