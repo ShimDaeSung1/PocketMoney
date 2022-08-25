@@ -124,7 +124,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         crr.deleteById(chatRoom.getId());
     }
 
-//    @Override
+
+
+    //    @Override
 //    public List<MessageDetailDto> findAllChatByRoomId(Long id) {
 //        List<Message> messageEntityList = cr.findAllByChatRoom_RoomId(roomId);
 //        List<MessageDetailDto> messageList = new ArrayList<>();
@@ -211,5 +213,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         chatRoomDetailDto.setMessageDetailDtoList(messageDetailDtoList);
         return chatRoomDetailDto;
+    }
+
+    @Override
+    public List<ChatRoomListDto> searchRoom(Long userId ,String roomName) {
+
+        User user = userRepository.findById(userId).orElseThrow(()->
+                new CUserNotFoundException("유저를 찾을 수 없습니다.", ErrorCode.FORBIDDEN));
+
+        List<ChatRoom> chatRoomList = crr.findByRoomNameContaining(Sort.by(Sort.Direction.DESC, "id"), roomName, user);
+
+        return chatRoomList.stream().map(arr -> entityToDto(arr, user)).collect(Collectors.toList());
     }
 }
