@@ -19,7 +19,10 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
 //            " where cr.id = :id")
 //    List<Object[]> findByUserIdWithMessages(@Param("id") ChatRoom id);
 
-
+    @Query("select count (cr.id) > 0" +
+            " from ChatRoom cr" +
+            " where cr.employeeId = :employeeId and cr.roomName = :roomName and cr.employerId = :employerId")
+    boolean exists(@Param("employeeId") User employeeId, @Param("roomName") String roomName, @Param("employerId") User employerId);
 
     @Query("select cr" +
             " from ChatRoom cr " +
