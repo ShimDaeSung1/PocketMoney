@@ -1,9 +1,13 @@
 package com.web.pocketmoney.entity.user;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.web.pocketmoney.entity.base.BaseEntity;
 import com.web.pocketmoney.entity.board.Board;
+import com.web.pocketmoney.entity.comment.Comment;
 import com.web.pocketmoney.entity.role.UserRole;
+import com.web.pocketmoney.entity.room.ChatRoom;
+import com.web.pocketmoney.entity.wish.Wish;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,7 +26,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
+//@ToString 이건 쓰면 안됨, ToString 이나 HashCode&Equals 에서 양 객체가 서로의 프로퍼티를 계속해서 참조하면서 무한 순환참조가 발생한다.
 public class User implements UserDetails {
 
     @Id
@@ -58,6 +62,22 @@ public class User implements UserDetails {
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>(); // 회원이 가지고 있는 권한 정보들
+
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    @JoinColumn(name = "user_id")
+    private List<Board> boards = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employeeId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRooms = new ArrayList<>();
+
+    @OneToMany(mappedBy = "employerId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<ChatRoom> chatRooms2 = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 
     //@CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     //@Column(name = "created_at")

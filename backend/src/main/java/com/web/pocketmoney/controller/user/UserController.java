@@ -1,6 +1,7 @@
 package com.web.pocketmoney.controller.user;
 
 import com.web.pocketmoney.dto.user.UserDTO;
+import com.web.pocketmoney.dto.user.UserModifyDTO;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.exception.CUserNotFoundException;
 import com.web.pocketmoney.exception.ChatRoomNotFoundException;
@@ -53,33 +54,25 @@ public class UserController {
 
     //회원 수정
     @PutMapping("") //RequestMapping("/user")
-    public ResponseEntity<Void> update(@RequestBody UserDTO userDTO, @AuthenticationPrincipal User user){
+    public ResponseEntity<Void> update(@RequestBody UserModifyDTO userModifyDTO, @AuthenticationPrincipal User user){
+        //RequestBody가 없을 경우, Json을 못 받는다. key=value로만 받을 수 있다.
+        userService.modify(userModifyDTO, user);
 
-        log.info("userDTOss : " + userDTO.getId());
-        log.info("user.getID : " + user.getId());
-        log.info("bool : " + userDTO.getId().equals(user.getId()));
-        if (!(userDTO.getId().equals(user.getId()))) {
-            log.info("different");
-            throw new CUserNotFoundException("권한이 없습니다.", ErrorCode.FORBIDDEN);
-        }else{
-            //RequestBody가 없을 경우, Json을 못 받는다. key=value로만 받을 수 있다.
-            userService.modify(userDTO, user);
+        log.info("whyyyy");
+        //세션 등록
+        //어썬티케이션 매니저에게 유저네임과 패스워드를 던져서
+        //매니저가 자동으로 세션등록 해준다.
+        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        log.info("gostarrrttt");
 
-            log.info("whyyyy");
-            //세션 등록
-            //어썬티케이션 매니저에게 유저네임과 패스워드를 던져서
-            //매니저가 자동으로 세션등록 해준다.
-            Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
-            SecurityContextHolder.getContext().setAuthentication(authentication);
-            log.info("gostarrrttt");
-
-//        return ResponseEntity.ok()
-//                .body(DefaultRes.res(StatusCode.NO_CONTENT, "회원정보 수정 완료!"));
-            return ResponseEntity.ok().build();
-        }
-
-
+//       return ResponseEntity.ok()
+//               .body(DefaultRes.res(StatusCode.NO_CONTENT, "회원정보 수정 완료!"));
+        return ResponseEntity.ok().build();
     }
+
+
+
 
     @DeleteMapping("") //RequestMapping("/user")
     public ResponseEntity<Void> delete(@AuthenticationPrincipal User user){

@@ -51,6 +51,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(ChatRoomExistsException.class)
+    public ResponseEntity<ErrorResponse> handleChatRoomExistsException(ChatRoomExistsException ex){
+        log.error("ChatRoomExistsException", ex);
+        ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        response.setMessage(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
 
     @ExceptionHandler({CBoardIdFailedException.class, CCommentIdFindFailedException.class,
             CEmailSigninFailedException.class, CEmailSignupFailedException.class,

@@ -1,10 +1,7 @@
 package com.web.pocketmoney.service.user;
 
 import com.web.pocketmoney.config.security.JwtTokenProvider;
-import com.web.pocketmoney.dto.user.LoginDTO;
-import com.web.pocketmoney.dto.user.SignupUserDTO;
-import com.web.pocketmoney.dto.user.TokenUserDTO;
-import com.web.pocketmoney.dto.user.UserDTO;
+import com.web.pocketmoney.dto.user.*;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.entity.user.UserRepository;
 import com.web.pocketmoney.exception.*;
@@ -48,11 +45,11 @@ public class UserServiceImpl implements UserService{
 
     @Override
     @Transactional
-    public void modify(UserDTO userDTO, User user) {
+    public void modify(UserModifyDTO userModifyDTO, User user) {
         // 수정시에는 영속성 컨텍스트 User 오브젝트를 영속화시키고, 영속화된 User 오브젝트를 수정
         // select를 해서 User오브젝트를 db로 부터 가져오는 이유는 영속화를 하기 위해서
         // 영속화된 오브젝트를 변경하면 DB에 Update문을 날려주기 때문
-        log.info(userDTO.toString());
+        log.info(userModifyDTO.toString());
 
         User persistance = userRepository.findById(user.getId()).orElseThrow(()->{
             return new CUserNotFoundException("수정할 수 없습니다.", ErrorCode.NOT_FOUND);
@@ -61,12 +58,12 @@ public class UserServiceImpl implements UserService{
         //oauth에 값이 없으면 수정 가능
         //Validate 체크,OAuth로그인한 사람들은 비밀번호 변경 불가
         if(persistance.getOauth()==null || persistance.getOauth().equals("")){
-            String rawPassword =  userDTO.getPassword();
+            String rawPassword =  userModifyDTO.getPassword();
             String encPassword = encoder.encode(rawPassword);
-            String nickName = userDTO.getNickName();
-            String sex = userDTO.getSex();
-            int age = userDTO.getAge();
-            String city = userDTO.getCity();
+            String nickName = userModifyDTO.getNickName();
+            String sex = userModifyDTO.getSex();
+            int age = userModifyDTO.getAge();
+            String city = userModifyDTO.getCity();
 
             persistance.setPassword(encPassword);
             persistance.setNickName(nickName);

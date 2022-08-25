@@ -6,6 +6,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 
 @Data
@@ -21,7 +22,7 @@ public class MessageDetailDto {
     //참조하는 채팅방의 PK
     private Long chatRoomId;
 
-    private LocalDateTime sendDate;
+    private Timestamp sendDate;
 
     private String roomName;
     //작성자는 닉네임으로

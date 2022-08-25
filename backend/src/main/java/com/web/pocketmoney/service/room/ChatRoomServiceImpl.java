@@ -85,6 +85,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
     @Override
     public void createRoom(ChatRoomRequestDto chatRoomRequestDto, Long userId) {
+
         Long boardId = chatRoomRequestDto.getBoardId();
 
         Board board = boardRepository.findById(boardId).orElseThrow(()->
@@ -95,6 +96,8 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .name(chatRoomRequestDto.getName())
                 .employerId(board.getUser().getId())
                 .build();
+
+
 
         ChatRoom chatRoom = chatRoomSaveDtoToEntity(chatRoomSaveDto);
         crr.save(chatRoom);

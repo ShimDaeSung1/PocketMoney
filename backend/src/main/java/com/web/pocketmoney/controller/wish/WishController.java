@@ -45,7 +45,9 @@ public class WishController {
 
     @PostMapping("") //RequestMapping("/wish")
     public ResponseEntity<Void> register(@RequestBody InsertWishDTO insertWishDTO, @AuthenticationPrincipal User user){
+
         insertWishDTO.setUserId(user.getId());
+        log.info(insertWishDTO);
         wishService.register(insertWishDTO);
 
 //        return ResponseEntity.ok()

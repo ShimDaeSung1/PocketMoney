@@ -1,7 +1,11 @@
 package com.web.pocketmoney.entity.board;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.web.pocketmoney.entity.comment.Comment;
 import com.web.pocketmoney.entity.user.User;
+import com.web.pocketmoney.entity.wish.Wish;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
@@ -19,7 +23,6 @@ import java.util.List;
 @NoArgsConstructor
 @Getter
 @Setter
-@ToString
 public class Board {
 
     @Id
@@ -49,8 +52,10 @@ public class Board {
     @Column(columnDefinition = "integer default 0")
     private int view;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @ManyToOne
     @JoinColumn(name="user_id")
+    @JsonIgnore
     private User user;
 
     @CreationTimestamp
@@ -58,4 +63,10 @@ public class Board {
 
     @UpdateTimestamp
     private Timestamp updateTime;
+
+    @OneToMany(mappedBy = "boardId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Comment> comments = new ArrayList<>();
+
+    @OneToMany(mappedBy = "boardId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Wish> wishes = new ArrayList<>();
 }
