@@ -46,6 +46,9 @@ public class Board {
     @Convert(converter = IntegerArrayConverter.class)
     private List<Integer> dayOfWeek;
 
+    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE)
+    private List<Comment> comments = new ArrayList<>();
+
     @Column(nullable = false) // 희망 시급
     private int pay;
 
@@ -64,8 +67,8 @@ public class Board {
     @UpdateTimestamp
     private Timestamp updateTime;
 
-    @OneToMany(mappedBy = "boardId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Comment> comments = new ArrayList<>();
+//    @OneToMany(mappedBy = "boardId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+//    private List<Comment> comments = new ArrayList<>();
 
     @OneToMany(mappedBy = "boardId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();

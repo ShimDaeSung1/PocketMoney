@@ -31,6 +31,7 @@ public class Comment extends BaseEntity {
     @JoinColumn(name="board_id")
     @JsonIgnore
     private Board boardId;
+
     private String text;
 
     @CreationTimestamp
