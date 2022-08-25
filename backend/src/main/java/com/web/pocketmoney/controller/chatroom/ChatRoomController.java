@@ -37,7 +37,7 @@ public class ChatRoomController {
 
     //    채팅방 제목으로 검색해서 불러오기
     @GetMapping("/list/search") //Requestmapping("/room")
-    public ResponseEntity<List<ChatRoomListDto>> searchChatRoom(@AuthenticationPrincipal User user, @RequestParam(value = "keyword") String title){
+    public ResponseEntity<List<ChatRoomListDto>> searchChatRoom(@AuthenticationPrincipal User user, @RequestParam(value = "title") String title){
         List<ChatRoomListDto> roomDetailDtoList = chatRoomService.searchRoom(user.getId(), title);
         return ResponseEntity.ok(roomDetailDtoList);
     }

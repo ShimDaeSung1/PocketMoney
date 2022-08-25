@@ -33,7 +33,7 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     //즉, %{title}%가 가능함.
     @Query("select cr" +
             " from ChatRoom cr " +
-            " where cr.employeeId = :userId or cr.employerId = :userId" +
+            " where (cr.employeeId = :userId or cr.employerId = :userId)" +
             " and cr.roomName LIKE %:roomName%")
     List<ChatRoom> findByRoomNameContaining(Sort sort, @Param("roomName") String roomName, @Param("userId") User userId);
 

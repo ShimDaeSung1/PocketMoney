@@ -5,6 +5,7 @@ import com.web.pocketmoney.entity.message.Message;
 import com.web.pocketmoney.entity.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
@@ -69,8 +70,7 @@ public class ChatRoom {
     @JsonIgnore
     private User employeeId;
 
-    @CreatedDate
-    @Column(name = "regdate", updatable = false)
+    @CreationTimestamp
     private Timestamp regDate;
 
     //객체의 두 관계중 하나를 연관관계의 주인으로 지정한다.

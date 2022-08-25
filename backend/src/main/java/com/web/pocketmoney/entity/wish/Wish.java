@@ -16,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Getter
-public class Wish extends BaseEntity {
+public class Wish{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
