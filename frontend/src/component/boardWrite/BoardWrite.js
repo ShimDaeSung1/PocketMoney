@@ -10,6 +10,7 @@ import Date from "./infbox/Date";
 import ImgUpload from "./infbox/ImgUpload";
 import writeBoardApi from "./../../api/board/WriteBoardApi";
 import editBoardApi from "../../api/board/EditBoardApi";
+import writeBoardImgApi from "./../../api/board/WriteBoardImgApi";
 
 const Outside = styled.div`
   width: 800px;
@@ -61,12 +62,13 @@ function BoardWrite() {
   const params = useParams();
   const boardId = params.boardId;
   const accessToken = sessionStorage.getItem(ACCESS_TOKEN);
+
+  const [imageUrl, setImageUrl] = useState();
   if (!accessToken) {
     alert("로그인이 필요한 서비스입니다!!!");
     window.location.href = "/login";
   }
   const navigate = useNavigate();
-
   const [title, setTitle] = useState(state ? state.title : "");
   const [content, setContent] = useState(state ? state.content : "");
   const [dayOfWeek, setDayOfWeek] = useState(state ? state.dayOfWeek : []);
@@ -124,7 +126,7 @@ function BoardWrite() {
             />
           </InfBlock>
           <InfBlock>
-            <ImgUpload />
+            <ImgUpload setImageUrl={setImageUrl} />
           </InfBlock>
         </InfBox>
         <ContentBox content={content} setContent={setContent} />
@@ -178,8 +180,14 @@ function BoardWrite() {
                 day.length &&
                 hour.length &&
                 minute.length &&
-                pay.length
+                pay.length &&
+                imageUrl
               ) {
+                const bodyFormData = new FormData();
+                bodyFormData.append("images", imageUrl);
+                writeBoardImgApi(bodyFormData, accessToken).then((resp) => {
+                  console.log(resp);
+                });
                 writeBoardApi(
                   title,
                   content,

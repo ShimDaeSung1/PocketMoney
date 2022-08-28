@@ -13,13 +13,12 @@ const UploadButton = styled.div`
   background-color: lightGreen;
 `;
 
-function ImgUpload() {
+function ImgUpload(props) {
   const ImgInput = useRef();
   const [uploading, setUploading] = useState(null);
-  const formData = new FormData();
   const onImgChange = (e) => {
     setUploading(true);
-    formData.append("file", e.target.files[0]);
+    props.setImageUrl(e.target.files[0]);
   };
   const onImgButtonClick = (e) => {
     ImgInput.current.click();
