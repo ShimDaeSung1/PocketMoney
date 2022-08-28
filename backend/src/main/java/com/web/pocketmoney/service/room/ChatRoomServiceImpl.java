@@ -15,6 +15,7 @@ import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.entity.user.UserRepository;
 import com.web.pocketmoney.exception.CBoardNotFoundException;
 import com.web.pocketmoney.exception.CUserNotFoundException;
+import com.web.pocketmoney.exception.ChatRoomExistsException;
 import com.web.pocketmoney.exception.ChatRoomNotFoundException;
 import com.web.pocketmoney.exception.handler.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -85,16 +86,29 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
     @Override
     public void createRoom(ChatRoomRequestDto chatRoomRequestDto, Long userId) {
+
         Long boardId = chatRoomRequestDto.getBoardId();
 
         Board board = boardRepository.findById(boardId).orElseThrow(()->
                 new CBoardNotFoundException("찾는 게시판이 없습니다.", ErrorCode.FORBIDDEN));
+
+        User user = userRepository.findById(userId).orElseThrow(()->
+                new CUserNotFoundException("찾는 유저가 없습니다.", ErrorCode.FORBIDDEN));
+        log.info("ddd:" +crr.exists(user, board.getTitle(), board.getUser()));
+
+        chatRoomRequestDto.setName(board.getTitle());
+
+        if(crr.exists(user, board.getTitle(), board.getUser())){
+            throw new ChatRoomExistsException("채팅방이 이미 존재합니다.", ErrorCode.CHATROOM_DUPLICATION);
+        }
 
         ChatRoomSaveDto chatRoomSaveDto = ChatRoomSaveDto.builder()
                 .employeeId(userId)
                 .name(chatRoomRequestDto.getName())
                 .employerId(board.getUser().getId())
                 .build();
+
+
 
         ChatRoom chatRoom = chatRoomSaveDtoToEntity(chatRoomSaveDto);
         crr.save(chatRoom);
@@ -110,7 +124,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         crr.deleteById(chatRoom.getId());
     }
 
-//    @Override
+
+
+    //    @Override
 //    public List<MessageDetailDto> findAllChatByRoomId(Long id) {
 //        List<Message> messageEntityList = cr.findAllByChatRoom_RoomId(roomId);
 //        List<MessageDetailDto> messageList = new ArrayList<>();
@@ -197,5 +213,16 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 
         chatRoomDetailDto.setMessageDetailDtoList(messageDetailDtoList);
         return chatRoomDetailDto;
+    }
+
+    @Override
+    public List<ChatRoomListDto> searchRoom(Long userId ,String roomName) {
+
+        User user = userRepository.findById(userId).orElseThrow(()->
+                new CUserNotFoundException("유저를 찾을 수 없습니다.", ErrorCode.FORBIDDEN));
+
+        List<ChatRoom> chatRoomList = crr.findByRoomNameContaining(Sort.by(Sort.Direction.DESC, "id"), roomName, user);
+
+        return chatRoomList.stream().map(arr -> entityToDto(arr, user)).collect(Collectors.toList());
     }
 }

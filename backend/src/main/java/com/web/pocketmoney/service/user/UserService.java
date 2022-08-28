@@ -1,9 +1,6 @@
 package com.web.pocketmoney.service.user;
 
-import com.web.pocketmoney.dto.user.LoginDTO;
-import com.web.pocketmoney.dto.user.SignupUserDTO;
-import com.web.pocketmoney.dto.user.TokenUserDTO;
-import com.web.pocketmoney.dto.user.UserDTO;
+import com.web.pocketmoney.dto.user.*;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.model.SingleResult;
 
@@ -12,7 +9,7 @@ public interface UserService {
     //회원 정보 조회
     UserDTO getUser(Long id);
 
-    void modify(UserDTO userDTO, User user);
+    void modify(UserModifyDTO userModifyDTO, User user);
 
     void delete(Long id);
 
@@ -20,7 +17,7 @@ public interface UserService {
         UserDTO userDTO = UserDTO.builder()
                 .id(user.getId())
                 .roleSet(user.getRoles())
-//                .regDate(user.getRegDate())
+                .email(user.getEmail())
                 .userName(user.getUsername())
                 .password(user.getPassword())
                 .sex(user.getSex())

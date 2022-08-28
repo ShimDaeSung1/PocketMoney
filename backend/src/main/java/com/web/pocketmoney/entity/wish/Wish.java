@@ -1,5 +1,6 @@
 package com.web.pocketmoney.entity.wish;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.pocketmoney.entity.base.BaseEntity;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.user.User;
@@ -15,7 +16,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Builder
 @Getter
-public class Wish extends BaseEntity {
+public class Wish{
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,10 +24,13 @@ public class Wish extends BaseEntity {
 
 
     //이 글을 관심글 등록한 사용자 아이디
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
     private User userId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn(name = "board_id")
+    @JsonIgnore
     private Board boardId;
-//    manyToOne에서 Cascade 걸어주는지 확인할 것,
 }

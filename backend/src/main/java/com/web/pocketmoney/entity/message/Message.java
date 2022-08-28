@@ -1,6 +1,7 @@
 package com.web.pocketmoney.entity.message;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.pocketmoney.dto.message.MessageSaveDto;
 import com.web.pocketmoney.entity.room.ChatRoom;
 import com.web.pocketmoney.entity.user.User;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -25,8 +27,9 @@ public class Message {
     private Long id;
 
     //메시지가 들어있는 채팅방
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "chatRoom_id")
+    @JsonIgnore
     private ChatRoom chatRoom;
 
     //보내는 사람 닉네임
@@ -41,7 +44,7 @@ public class Message {
 //    private String recipientName;
     @CreationTimestamp
     @Column(updatable = false)
-    private LocalDateTime sendDate;
+    private Timestamp sendDate;
 
     //메시지를 보낸 상태
 //    private MessageStatus status;

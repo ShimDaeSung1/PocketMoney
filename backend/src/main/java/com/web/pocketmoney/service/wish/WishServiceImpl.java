@@ -42,7 +42,7 @@ public class WishServiceImpl implements WishService{
 
         Wish wish = dtoToEntity(insertwishDTO);
         log.info("wishDTO : " + insertwishDTO);
-        log.info("wish : "+ wish);
+        log.info("wish : "+ wish.getUserId().getId(), wish.getBoardId().getId());
         wishRepository.save(wish);
         return wish.getId();
     }

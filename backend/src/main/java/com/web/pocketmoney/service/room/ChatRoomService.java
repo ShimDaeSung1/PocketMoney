@@ -25,6 +25,8 @@ public interface ChatRoomService {
 
    void deleteById(Long chatRoomId);
 
+   List<ChatRoomListDto> searchRoom(Long userId, String roomName);
+
 //   List<MessageDetailDto> findAllChatByRoomId(Long id);
 
    // 채팅방 만들 때

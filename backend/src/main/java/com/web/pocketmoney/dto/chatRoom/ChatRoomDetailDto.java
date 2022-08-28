@@ -7,6 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -20,7 +21,7 @@ public class ChatRoomDetailDto {
     private String name;
     
     //생성날짜랑, 상대방유저
-    private LocalDateTime regDate;
+    private Timestamp regDate;
     private Long userId;
     private String nickName;
 

@@ -1,21 +1,24 @@
 package com.web.pocketmoney.entity.room;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.web.pocketmoney.entity.message.Message;
 import com.web.pocketmoney.entity.user.User;
 import lombok.*;
 import lombok.extern.log4j.Log4j2;
+import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Log4j2
 @Entity
 public class ChatRoom {
 
@@ -57,22 +60,25 @@ public class ChatRoom {
     @Column(nullable = false)
     private String roomName;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn // 아래와 같이 User를 참조하는게 여러 번 나올경우, JoinColumn에는 아무것도 안 써줌
+    @JsonIgnore
     private User employerId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnore
     private User employeeId;
 
-    @CreatedDate
-    @Column(name = "regdate", updatable = false)
-    private LocalDateTime regDate;
+    @CreationTimestamp
+    private Timestamp regDate;
 
     //객체의 두 관계중 하나를 연관관계의 주인으로 지정한다.
     //연관관계의 주인만이 외래 키를 관리(등록, 수정)한다. DB에 접근한다.
     //주인이 아닌 쪽은 읽기만 가능하다.
     //mappedBy = 연관관계의 주인이 아니라는 뜻, 컬럼을 만들지 않음
     //일반적으로 외래키는 ManyToOne이 가지고 있으므로 연관관계의 주인은 ManyToOne으로 생각하면 됨
-    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> chatMessageList = new ArrayList<>();
 
 //    public static ChatRoom toChatRoomEntity(String roomName, String employer, String employee){

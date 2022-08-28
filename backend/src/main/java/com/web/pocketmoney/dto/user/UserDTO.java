@@ -24,6 +24,8 @@ public class UserDTO {
 
     private List<String> roleSet = new ArrayList<>();
 
+    private String email;
+
     private String userName;
 
     private String password;
