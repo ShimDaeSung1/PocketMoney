@@ -20,7 +20,7 @@ function createRoomApi(boardId, name, accesstoken) {
       }
     })
     .catch((error) => {
-      alert(error.response.data.errorMessage);
+      alert(error.response.data.message);
       return Promise.reject();
     });
 }

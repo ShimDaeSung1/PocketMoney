@@ -5,6 +5,8 @@ import DefaultRoom from "./DefaultRoom";
 import SockJS from "sockjs-client";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
 import { Stomp } from "stompjs/lib/stomp.js";
+import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
+import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   width: 1050px;
@@ -27,15 +29,18 @@ const StyledInput = styled.input`
 `;
 
 function ChattingRoom(props) {
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [chatInf, setChatInf] = useState(null);
-
+  const [chatInfDetails, setChatInfDetails] = useState(null);
   const msgRef = useRef();
   const sendRef = useRef();
 
-  console.log(chatInf);
-
-  console.log("-------------" + msgRef.current);
   useEffect(() => {
+    console.log(chatInfDetails);
+  }, [chatInfDetails]);
+
+  useEffect(() => {
+    console.log(chatInf);
     if (chatInf !== null) {
       //1. SockJS를 내부에 들고있는 stomp를 내어줌
       const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
@@ -50,7 +55,7 @@ function ChattingRoom(props) {
       //2. connection이 맺어지면 실행
       stomp.connect({}, function () {
         console.log("STOMP Connection");
-
+        setChatInfDetails(chatInf);
         //4. subscribe(path, callback)으로 메세지를 받을 수 있음
         stomp.subscribe(
           BACKEND_ADDRESS + "/sub/chat/room/" + roomId,
@@ -109,8 +114,10 @@ function ChattingRoom(props) {
               writer: username,
             })
           );
-          alert("시작");
           msg.value = "";
+          findChttingRoomApi(chatInf.id, accesstoken).then((resp) => {
+            setChatInfDetails(resp);
+          });
         }
       });
     }

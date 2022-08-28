@@ -80,8 +80,11 @@ const BoardDetails = () => {
   const [comments, setComments] = useState();
 
   const match = () => {
-    createRoomApi(boardId, data.title, accesstoken);
-    navigate("/chat");
+    createRoomApi(boardId, data.title, accesstoken).then((resp) => {
+      if (!resp) {
+        navigate("/chat");
+      }
+    });
   };
 
   useEffect(() => {
