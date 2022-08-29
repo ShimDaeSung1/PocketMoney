@@ -2,12 +2,15 @@ package com.web.pocketmoney.entity.user;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+<<<<<<< HEAD
 import com.web.pocketmoney.entity.base.BaseEntity;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.comment.Comment;
 import com.web.pocketmoney.entity.role.UserRole;
 import com.web.pocketmoney.entity.room.ChatRoom;
 import com.web.pocketmoney.entity.wish.Wish;
+=======
+>>>>>>> origin/hyeon
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.security.core.GrantedAuthority;
