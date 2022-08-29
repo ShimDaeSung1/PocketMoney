@@ -1,40 +1,25 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import AllMessage from "./AllMessage";
 import DefaultRoom from "./DefaultRoom";
 import SockJS from "sockjs-client";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
 import { Stomp } from "stompjs/lib/stomp.js";
-import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
-import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   display: flex;
   width: 1050px;
-  height: 400px;
   border-bottom: 5px solid blue;
 `;
-
-const StyledInput = styled.input`
-  display: block;
-  font-size: 50px;
-  width: 770px;
-  background-color: #00000000;
-  padding: 10px;
-  height: 50px;
-  border: none;
-  &:focus {
-    outline: none;
-    border: none;
-  }
+const ChatBox = styled.div`
+  width: 680px;
 `;
 const ChatRoom = styled.div`
-  margin-bottom: 500px;
   display: flex;
   flex-direction: column;
   width: 680px;
   height: 400px;
-  border: 5px solid red;
+  overflow: auto;
 `;
 const Myself = styled.div`
   margin: 10px;
@@ -61,13 +46,60 @@ const SendDate = styled.div`
   font-size: 15px;
 `;
 
+const Write = styled.div`
+  margin: 10px auto;
+  width: 670px;
+  padding: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+`;
+
+const StyledTextarea = styled.textarea`
+  font-family: "Gowun Dodum", sans-serif;
+  font-size: 30px;
+  background-color: #00000000;
+  padding: 3px 10px 10px 10px;
+  height: 40px;
+  max-height: 120px;
+  width: 100%;
+  resize: none;
+`;
+
+const CommentWritingButton = styled.button`
+  height: 50px;
+  width: 60px;
+  margin-left: 5px;
+  padding: 7px;
+  background: #333333;
+  color: #cccccc;
+  font-family: "Gowun Dodum", sans-serif;
+  border-radius: 5px;
+`;
+
 function ChattingRoom(props) {
+  const writingRef = useRef();
+
+  const handleResizeHeight = useCallback(() => {
+    if (writingRef === null || writingRef.current === null) return;
+    if (writingRef.current.style.height === "20px") {
+      writingRef.current.style.overflow = "hidden";
+    } else {
+      writingRef.current.style.overflow = "";
+    }
+    writingRef.current.style.height = "20px";
+    writingRef.current.style.height =
+      writingRef.current.scrollHeight - 18 + "px";
+  }, []);
+
   const [chatInf, setChatInf] = useState(null);
   const msgRef = useRef();
   const sendRef = useRef();
 
   useEffect(() => {
     console.log(chatInf);
+    document.getElementById("chatRoom").scrollTop =
+      document.getElementById("chatRoom").scrollHeight;
     if (chatInf !== null) {
       //1. SockJS를 내부에 들고있는 stomp를 내어줌
       const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
@@ -148,61 +180,53 @@ function ChattingRoom(props) {
     <Outside>
       <AllMessage roomList={props.roomList} setChatInf={setChatInf} />
       {/* <DefaultRoom /> */}
-      <ChatRoom>
-        {chatInf
-          ? chatInf.messageDetailDtoList.map((inf) => {
-              let date = new Date(inf.sendDate);
-              if (chatInf.userId === inf.writerId) {
-                return (
-                  <Myself>
-                    <Content>{inf.message}</Content>
-                    <SendDate>
-                      {" "}
-                      {date.getYear() + 1900}년 {date.getMonth()}월{" "}
-                      {date.getDay()}일 {date.getHours()}시 {date.getMinutes()}
-                      분
-                    </SendDate>
-                  </Myself>
-                );
-              } else {
-                return (
-                  <Opponent>
-                    <Content>{inf.message}</Content>
-                    <SendDate>
-                      {" "}
-                      {date.getYear() + 1900}년 {date.getMonth()}월{" "}
-                      {date.getDay()}일 {date.getHours()}시 {date.getMinutes()}
-                      분
-                    </SendDate>
-                  </Opponent>
-                );
-              }
-            })
-          : ""}
-      </ChatRoom>
-      {/* <div class="container">
-        <div class="col-6">
-          <h1>{chatInf ? chatInf.name : ""}</h1>
-        </div>
-        <div>
-          <div ref={msgRef} id="msgArea" class="col"></div>
-          <div class="col-6">
-            <div class="input-group mb-3">
-              <input type="text" id="msg" class="form-control" />
-              <div class="input-group-append">
-                <button
-                  ref={sendRef}
-                  class="btn btn-outline-secondary"
-                  type="button"
-                  id="button-send"
-                >
-                  전송
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-6"></div>
+      <ChatBox>
+        <ChatRoom id="chatRoom">
+          {chatInf
+            ? chatInf.messageDetailDtoList.map((inf) => {
+                let date = new Date(inf.sendDate);
+                if (chatInf.userId === inf.writerId) {
+                  return (
+                    <Myself>
+                      <Content>{inf.message}</Content>
+                      <SendDate>
+                        {" "}
+                        {date.getYear() + 1900}년 {date.getMonth()}월{" "}
+                        {date.getDay()}일 {date.getHours()}시{" "}
+                        {date.getMinutes()}분
+                      </SendDate>
+                    </Myself>
+                  );
+                } else {
+                  return (
+                    <Opponent>
+                      <Content>{inf.message}</Content>
+                      <SendDate>
+                        {" "}
+                        {date.getYear() + 1900}년 {date.getMonth()}월{" "}
+                        {date.getDay()}일 {date.getHours()}시{" "}
+                        {date.getMinutes()}분
+                      </SendDate>
+                    </Opponent>
+                  );
+                }
+              })
+            : ""}
+        </ChatRoom>
+        <Write>
+          <StyledTextarea
+            ref={writingRef}
+            id="msg"
+            onChange={(e) => {
+              handleResizeHeight();
+            }}
+          />
+          <CommentWritingButton ref={sendRef}>{"등록"}</CommentWritingButton>
+        </Write>
+      </ChatBox>
+
+      {/* <div>
+        <div ref={msgRef} id="msgArea" class="col"></div>
       </div> */}
     </Outside>
   );

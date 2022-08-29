@@ -6,7 +6,7 @@ import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   width: 350px;
-  height: 400px;
+  height: 500px;
   overflow: auto;
   border-right: 5px solid blue;
 `;
