@@ -9,6 +9,7 @@ import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
+  display: flex;
   width: 1050px;
   height: 400px;
   border-bottom: 5px solid blue;
@@ -27,17 +28,43 @@ const StyledInput = styled.input`
     border: none;
   }
 `;
+const ChatRoom = styled.div`
+  margin-bottom: 500px;
+  display: flex;
+  flex-direction: column;
+  width: 680px;
+  height: 400px;
+  border: 5px solid red;
+`;
+const Myself = styled.div`
+  margin: 10px;
+  border-radius: 15px;
+  background-color: Yellow;
+  padding-left: 10px;
+  margin-left: auto;
+`;
+const Opponent = styled.div`
+  margin: 10px;
+  border-radius: 15px;
+  padding-left: 10px;
+  margin-right: auto;
+  background-color: lightBlue;
+`;
+const Content = styled.div`
+  min-width: 200px;
+  max-width: 500px;
+  min-height: 40px;
+  font-size: 25px;
+  white-space: pre-line;
+`;
+const SendDate = styled.div`
+  font-size: 15px;
+`;
 
 function ChattingRoom(props) {
-  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [chatInf, setChatInf] = useState(null);
-  const [chatInfDetails, setChatInfDetails] = useState(null);
   const msgRef = useRef();
   const sendRef = useRef();
-
-  useEffect(() => {
-    console.log(chatInfDetails);
-  }, [chatInfDetails]);
 
   useEffect(() => {
     console.log(chatInf);
@@ -55,42 +82,39 @@ function ChattingRoom(props) {
       //2. connection이 맺어지면 실행
       stomp.connect({}, function () {
         console.log("STOMP Connection");
-        setChatInfDetails(chatInf);
         //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-        stomp.subscribe(
-          BACKEND_ADDRESS + "/sub/chat/room/" + roomId,
-          function (chat) {
-            alert("pppppppppppppp");
-            var content = JSON.parse(chat.body);
+        stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
+          alert("pppppppppppppp");
+          var content = JSON.parse(chat.body);
 
-            var writer = content.writer;
-            var str = "";
-            alert("pppppppppppppp");
-            if (writer === username) {
-              str = "<div class='col-6'>";
-              str += "<div class='alert alert-secondary'>";
-              str += "<b>" + writer + " : " + "하이하이" + "</b>";
-              str += "</div></div>";
-              alert("zzzzzzzzzzzzzzz");
-              console.log("1-------------" + str);
-              //  msgRef.current.value.append(str);
-              //$("#msgArea").append(str);
-            } else {
-              str = "<div class='col-6'>";
-              str += "<div class='alert alert-warning'>";
-              str += "<b>" + writer + " : " + "하이하이222" + "</b>";
-              str += "</div></div>";
-              alert("eeeeeeeeeeeeeeeeee");
-              console.log("2-------------" + str);
-              //  msgRef.current.value.append(str);
-              // $("#msgArea").append(str);
-            }
-            alert("qqqqqqqqqqqqqqq");
-            console.log("3-------------" + str);
-            //msgRef.current.value.append(str);
+          console.log("zㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+          var writer = content.writer;
+          var str = "";
+          alert("pppppppppppppp");
+          if (writer === username) {
+            str = "<div class='col-6'>";
+            str += "<div class='alert alert-secondary'>";
+            str += "<b>" + writer + " : " + "하이하이" + "</b>";
+            str += "</div></div>";
+            alert("zzzzzzzzzzzzzzz");
+            console.log("1-------------" + str);
+            //  msgRef.current.value.append(str);
             //$("#msgArea").append(str);
+          } else {
+            str = "<div class='col-6'>";
+            str += "<div class='alert alert-warning'>";
+            str += "<b>" + writer + " : " + "하이하이222" + "</b>";
+            str += "</div></div>";
+            alert("eeeeeeeeeeeeeeeeee");
+            console.log("2-------------" + str);
+            //  msgRef.current.value.append(str);
+            // $("#msgArea").append(str);
           }
-        );
+          alert("qqqqqqqqqqqqqqq");
+          console.log("3-------------" + str);
+          //msgRef.current.value.append(str);
+          //$("#msgArea").append(str);
+        });
 
         //3. send(path, header, message)로 메세지를 보낼 수 있음
         stomp.send(
@@ -115,9 +139,6 @@ function ChattingRoom(props) {
             })
           );
           msg.value = "";
-          findChttingRoomApi(chatInf.id, accesstoken).then((resp) => {
-            setChatInfDetails(resp);
-          });
         }
       });
     }
@@ -126,8 +147,40 @@ function ChattingRoom(props) {
   return (
     <Outside>
       <AllMessage roomList={props.roomList} setChatInf={setChatInf} />
-      <DefaultRoom />
-      <div class="container">
+      {/* <DefaultRoom /> */}
+      <ChatRoom>
+        {chatInf
+          ? chatInf.messageDetailDtoList.map((inf) => {
+              let date = new Date(inf.sendDate);
+              if (chatInf.userId === inf.writerId) {
+                return (
+                  <Myself>
+                    <Content>{inf.message}</Content>
+                    <SendDate>
+                      {" "}
+                      {date.getYear() + 1900}년 {date.getMonth()}월{" "}
+                      {date.getDay()}일 {date.getHours()}시 {date.getMinutes()}
+                      분
+                    </SendDate>
+                  </Myself>
+                );
+              } else {
+                return (
+                  <Opponent>
+                    <Content>{inf.message}</Content>
+                    <SendDate>
+                      {" "}
+                      {date.getYear() + 1900}년 {date.getMonth()}월{" "}
+                      {date.getDay()}일 {date.getHours()}시 {date.getMinutes()}
+                      분
+                    </SendDate>
+                  </Opponent>
+                );
+              }
+            })
+          : ""}
+      </ChatRoom>
+      {/* <div class="container">
         <div class="col-6">
           <h1>{chatInf ? chatInf.name : ""}</h1>
         </div>
@@ -150,7 +203,7 @@ function ChattingRoom(props) {
           </div>
         </div>
         <div class="col-6"></div>
-      </div>
+      </div> */}
     </Outside>
   );
 }

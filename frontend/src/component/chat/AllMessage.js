@@ -5,7 +5,6 @@ import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
-  display: inline-block;
   width: 350px;
   height: 400px;
   overflow: auto;

@@ -36,7 +36,6 @@ function ChatPage() {
       <Block style={{ height: "50px" }}></Block>
       <Block></Block>
       <ChattingRoom roomList={roomList} />
-      <Block></Block>
     </Outside>
   );
 }
