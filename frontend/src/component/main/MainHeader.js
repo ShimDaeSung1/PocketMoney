@@ -92,10 +92,11 @@ function MainHeader(props) {
     if (!props.sword.length) {
       alert("검색어를 입력해주세요");
     } else {
-      searchBoardApi(props.sword, props.num).then((dataPromise) => {
+      searchBoardApi(props.sword, 1).then((dataPromise) => {
         props.setBoards(dataPromise);
       });
       props.setSearch(true);
+      props.setNotDefault(true);
     }
   };
   const enterKey = () => {

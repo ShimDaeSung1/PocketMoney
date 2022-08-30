@@ -1,11 +1,12 @@
 import styled from "styled-components";
 import Boards from "./Boards";
-import { useNavigate, useParams } from "react-router";
+import { useNavigate } from "react-router";
 import Numbers from "./Numbers";
-import { useState, useEffect } from "react";
-import findBorldListApi from "./../../api/board/FindBorldListApi";
+import React, { useState, useEffect } from "react";
 import MainHeader from "./MainHeader";
 import searchBoardApi from "./../../api/board/SearchBoardApi";
+import findLatestBoardAPi from "./../../api/board/FindLatestBoardApi";
+import findBorldListApi from "./../../api/board/FindBorldListApi";
 
 const Outside = styled.div`
   width: 1050px;
@@ -24,8 +25,18 @@ const TitleLogo = styled.div`
   line-height: 250px;
   text-align: center;
 `;
+const EntireWork = styled.div`
+  display: inline-block;
+  width: 525px;
+  height: 250px;
+  background-color: lightBlue;
+  font-size: 50px;
+  line-height: 250px;
+  text-align: center;
+`;
 const LocalWork = styled.div`
-  width: 1050px;
+  display: inline-block;
+  width: 525px;
   height: 250px;
   background-color: yellow;
   font-size: 50px;
@@ -45,17 +56,24 @@ function DefaultPage() {
   const navigate = useNavigate();
   const [sword, setSword] = useState("");
   const [search, setSearch] = useState(false);
-  const [num, setNum] = useState(1);
+  const [num, setNum] = useState(0);
   const [boards, setBoards] = useState("");
+  const [notDefault, setNotDefault] = useState(false);
   useEffect(() => {
     if (search) {
       searchBoardApi(sword, num).then((dataPromise) => {
         setBoards(dataPromise);
       });
     } else {
-      findBorldListApi(num ? num : 1).then((dataPromise) => {
-        setBoards(dataPromise);
-      });
+      if (num === 0) {
+        findLatestBoardAPi().then((dataPromise) => {
+          setBoards(dataPromise);
+        });
+      } else {
+        findBorldListApi(num ? num : 1).then((dataPromise) => {
+          setBoards(dataPromise);
+        });
+      }
     }
   }, [num]);
 
@@ -67,17 +85,39 @@ function DefaultPage() {
         sword={sword}
         setSword={setSword}
         num={num}
+        setNotDefault={setNotDefault}
       />
       <Outside>
-        <TitleLogo>PocketMoney</TitleLogo>
-        <LocalWork>근처 일자리</LocalWork>
-        <FindWork
-          onClick={() => {
-            navigate("/board/write");
-          }}
-        >
-          일자리 구인
-        </FindWork>
+        {notDefault === false ? (
+          <React.Fragment>
+            <TitleLogo>PocketMoney</TitleLogo>
+            <EntireWork
+              onClick={() => {
+                setNum(1);
+                setNotDefault(true);
+              }}
+            >
+              전체 일자리
+            </EntireWork>
+            <LocalWork
+              onClick={() => {
+                setNum(1);
+                setNotDefault(true);
+              }}
+            >
+              근처 일자리
+            </LocalWork>
+            <FindWork
+              onClick={() => {
+                navigate("/board/write");
+              }}
+            >
+              일자리 구인
+            </FindWork>
+          </React.Fragment>
+        ) : (
+          ""
+        )}
         <Boards boards={boards.boards} navigate={navigate} />
         <Numbers
           num={num}
