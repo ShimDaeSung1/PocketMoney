@@ -67,6 +67,7 @@ function AllMessage(props) {
   function selectOneChatRoom(id) {
     findChttingRoomApi(id, accesstoken).then((resp) => {
       props.setChatInf(resp);
+      props.setMessages(resp.messageDetailDtoList);
     });
   }
   return (

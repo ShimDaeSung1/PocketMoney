@@ -93,59 +93,38 @@ function ChattingRoom(props) {
   }, []);
 
   const [chatInf, setChatInf] = useState(null);
+  const [messages, setMessages] = useState([]);
   const msgRef = useRef();
   const sendRef = useRef();
+  console.log(messages);
 
   useEffect(() => {
-    console.log(chatInf);
     document.getElementById("chatRoom").scrollTop =
       document.getElementById("chatRoom").scrollHeight;
     if (chatInf !== null) {
       //1. SockJS를 내부에 들고있는 stomp를 내어줌
       const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
       const stomp = Stomp.over(sockJs);
-
+      if (sockJs.connected) sockJs.deactivate();
       let roomName = chatInf.name;
-      var roomId = chatInf.id;
-      var username = chatInf.nickName;
-
-      console.log(roomName + ", " + roomId + ", " + username);
+      let roomId = chatInf.id;
+      let username = chatInf.nickName;
 
       //2. connection이 맺어지면 실행
       stomp.connect({}, function () {
         console.log("STOMP Connection");
         //4. subscribe(path, callback)으로 메세지를 받을 수 있음
         stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
-          alert("pppppppppppppp");
-          var content = JSON.parse(chat.body);
+          let content = JSON.parse(chat.body);
+          let writer = content.writer;
+          let str = "";
+          let today = new Date();
 
-          console.log("zㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
-          var writer = content.writer;
-          var str = "";
-          alert("pppppppppppppp");
           if (writer === username) {
-            str = "<div class='col-6'>";
-            str += "<div class='alert alert-secondary'>";
-            str += "<b>" + writer + " : " + "하이하이" + "</b>";
-            str += "</div></div>";
-            alert("zzzzzzzzzzzzzzz");
-            console.log("1-------------" + str);
-            //  msgRef.current.value.append(str);
-            //$("#msgArea").append(str);
+            alert("내가 썼다");
           } else {
-            str = "<div class='col-6'>";
-            str += "<div class='alert alert-warning'>";
-            str += "<b>" + writer + " : " + "하이하이222" + "</b>";
-            str += "</div></div>";
-            alert("eeeeeeeeeeeeeeeeee");
-            console.log("2-------------" + str);
-            //  msgRef.current.value.append(str);
-            // $("#msgArea").append(str);
+            alert("내가 안썼다");
           }
-          alert("qqqqqqqqqqqqqqq");
-          console.log("3-------------" + str);
-          //msgRef.current.value.append(str);
-          //$("#msgArea").append(str);
         });
 
         //3. send(path, header, message)로 메세지를 보낼 수 있음
@@ -159,8 +138,6 @@ function ChattingRoom(props) {
       document.addEventListener("mousedown", function (event) {
         if (sendRef.current.contains(event.target)) {
           let msg = document.getElementById("msg");
-
-          console.log(username + ":" + msg.value);
           stomp.send(
             "/pub/chat/message",
             {},
@@ -178,12 +155,16 @@ function ChattingRoom(props) {
 
   return (
     <Outside>
-      <AllMessage roomList={props.roomList} setChatInf={setChatInf} />
+      <AllMessage
+        roomList={props.roomList}
+        setChatInf={setChatInf}
+        setMessages={setMessages}
+      />
       {/* <DefaultRoom /> */}
       <ChatBox>
         <ChatRoom id="chatRoom">
           {chatInf
-            ? chatInf.messageDetailDtoList.map((inf) => {
+            ? messages.map((inf) => {
                 let date = new Date(inf.sendDate);
                 if (chatInf.userId === inf.writerId) {
                   return (
@@ -213,6 +194,9 @@ function ChattingRoom(props) {
               })
             : ""}
         </ChatRoom>
+        <React.Fragment>
+          <div ref={msgRef}></div>
+        </React.Fragment>
         <Write>
           <StyledTextarea
             ref={writingRef}
@@ -224,10 +208,6 @@ function ChattingRoom(props) {
           <CommentWritingButton ref={sendRef}>{"등록"}</CommentWritingButton>
         </Write>
       </ChatBox>
-
-      {/* <div>
-        <div ref={msgRef} id="msgArea" class="col"></div>
-      </div> */}
     </Outside>
   );
 }
