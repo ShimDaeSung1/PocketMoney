@@ -6,7 +6,8 @@ function edidUserApi(
   age,
   sex,
   city,
-  userName,
+  password,
+  newPassword,
   navigate,
   accesstoken
 ) {
@@ -20,7 +21,8 @@ function edidUserApi(
     city: city,
     nickName: nickName,
     sex: sex,
-    userName: userName,
+    password: password,
+    newPassword: newPassword,
   };
 
   axios
