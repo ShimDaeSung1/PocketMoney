@@ -7,6 +7,8 @@ import MainHeader from "./MainHeader";
 import searchBoardApi from "./../../api/board/SearchBoardApi";
 import findLatestBoardAPi from "./../../api/board/FindLatestBoardApi";
 import findBorldListApi from "./../../api/board/FindBorldListApi";
+import findLocalBoardListApi from "./../../api/board/FIndLocalBoardListApi";
+import { ACCESS_TOKEN, MYCITY } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   width: 1050px;
@@ -56,24 +58,31 @@ function DefaultPage() {
   const navigate = useNavigate();
   const [sword, setSword] = useState("");
   const [search, setSearch] = useState(false);
+  const [citySearch, setCitySearch] = useState(false);
   const [num, setNum] = useState(0);
   const [boards, setBoards] = useState("");
   const [notDefault, setNotDefault] = useState(false);
+
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
+  const city = sessionStorage.getItem(MYCITY);
+
   useEffect(() => {
     if (search) {
       searchBoardApi(sword, num).then((dataPromise) => {
         setBoards(dataPromise);
       });
+    } else if (citySearch) {
+      findLocalBoardListApi(city, accesstoken, num).then((dataPromise) => {
+        setBoards(dataPromise);
+      });
+    } else if (num === 0) {
+      findLatestBoardAPi().then((dataPromise) => {
+        setBoards(dataPromise);
+      });
     } else {
-      if (num === 0) {
-        findLatestBoardAPi().then((dataPromise) => {
-          setBoards(dataPromise);
-        });
-      } else {
-        findBorldListApi(num ? num : 1).then((dataPromise) => {
-          setBoards(dataPromise);
-        });
-      }
+      findBorldListApi(num ? num : 1).then((dataPromise) => {
+        setBoards(dataPromise);
+      });
     }
   }, [num]);
 
@@ -85,6 +94,7 @@ function DefaultPage() {
         sword={sword}
         setSword={setSword}
         num={num}
+        setNum={setNum}
         setNotDefault={setNotDefault}
       />
       <Outside>
@@ -101,8 +111,13 @@ function DefaultPage() {
             </EntireWork>
             <LocalWork
               onClick={() => {
-                setNum(1);
-                setNotDefault(true);
+                if (!sessionStorage.getItem(ACCESS_TOKEN)) {
+                  alert("로그인 후 이용이 가능합니다!");
+                } else {
+                  setNum(1);
+                  setNotDefault(true);
+                  setCitySearch(true);
+                }
               }}
             >
               근처 일자리

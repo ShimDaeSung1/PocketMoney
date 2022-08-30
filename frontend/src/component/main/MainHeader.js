@@ -97,6 +97,7 @@ function MainHeader(props) {
       });
       props.setSearch(true);
       props.setNotDefault(true);
+      props.setNum(1);
     }
   };
   const enterKey = () => {
