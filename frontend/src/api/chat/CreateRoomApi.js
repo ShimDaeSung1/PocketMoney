@@ -1,20 +1,21 @@
 import axios from "axios";
-import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
+import { BACKEND_ADDRESS } from "../../constant/ADDRESS";
 
-function createCommentApi(boardId, content, accesstoken) {
+function createRoomApi(boardId, name, accesstoken) {
   const config = {
     headers: {
       "X-AUTH-TOKEN": accesstoken,
     },
   };
   const body = {
-    text: content,
+    boardId: boardId,
+    name: name,
   };
   return axios
-    .post(BACKEND_ADDRESS + "/comments/" + boardId, body, config)
+    .post(BACKEND_ADDRESS + "/room/", body, config)
     .then((response) => {
-      if (response.status === 200) {
-        alert("작성이 완료되었습니다");
+      if (response.status === 204) {
+        alert("채팅방이 생성되었습니다.");
         return response.data;
       }
     })
@@ -24,4 +25,4 @@ function createCommentApi(boardId, content, accesstoken) {
     });
 }
 
-export default createCommentApi;
+export default createRoomApi;

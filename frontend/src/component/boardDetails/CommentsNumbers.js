@@ -71,15 +71,28 @@ function CommentsNumbers(props) {
           ""
         )}
         {range(props.start, props.end + 1).map((index) => {
-          return (
-            <NumberButton
-              onClick={() => {
-                props.setCommentPage(index);
-              }}
-            >
-              {index}
-            </NumberButton>
-          );
+          if (props.commentPage === index) {
+            return (
+              <NumberButton
+                style={{ backgroundColor: "lightskyblue" }}
+                onClick={() => {
+                  props.setCommentPage(index);
+                }}
+              >
+                {index}
+              </NumberButton>
+            );
+          } else {
+            return (
+              <NumberButton
+                onClick={() => {
+                  props.setCommentPage(index);
+                }}
+              >
+                {index}
+              </NumberButton>
+            );
+          }
         })}
         {props.next ? (
           <NextButton

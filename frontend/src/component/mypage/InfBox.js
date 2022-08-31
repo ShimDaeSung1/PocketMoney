@@ -14,15 +14,18 @@ const Information = styled.div`
   border: 2px solid blue;
   border-radius: 100px;
 `;
-function InfBox() {
+function InfBox(props) {
   return (
     <Outside>
-      <Information>이메일: </Information>
-      <Information>닉네임: </Information>
-      <Information>이름: </Information>
-      <Information>나이: </Information>
-      <Information>성별: </Information>
-      <Information>도시: </Information>
+      <Information>
+        이메일: {props.userInf ? props.userInf.nickName : ""}
+      </Information>
+      <Information>
+        닉네임: {props.userInf ? props.userInf.nickName : ""}
+      </Information>
+      <Information>나이: {props.userInf ? props.userInf.age : ""}</Information>
+      <Information>성별: {props.userInf ? props.userInf.sex : ""}</Information>
+      <Information>도시: {props.userInf ? props.userInf.city : ""}</Information>
     </Outside>
   );
 }

@@ -18,12 +18,7 @@ function loginApi(email, password, navigate) {
       }
     })
     .catch((error) => {
-      if (error.response.status === 401 || error.response.status === 400) {
-        alert("가입하지 않은 이메일이거나, 잘못된 비밀번호 입니다");
-        return Promise.reject();
-      }
-      alert("이메일 로그인 실패!");
-      navigate("/");
+      alert(error.response.data.message);
     });
 }
 

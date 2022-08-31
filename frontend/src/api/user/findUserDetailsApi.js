@@ -1,20 +1,17 @@
 import axios from "axios";
-import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
+import { BACKEND_ADDRESS } from "../../constant/ADDRESS";
 
-function createCommentApi(boardId, content, accesstoken) {
+function findUserDetailsApi(accesstoken) {
   const config = {
     headers: {
       "X-AUTH-TOKEN": accesstoken,
     },
   };
-  const body = {
-    text: content,
-  };
+
   return axios
-    .post(BACKEND_ADDRESS + "/comments/" + boardId, body, config)
+    .get(BACKEND_ADDRESS + "/user", config)
     .then((response) => {
       if (response.status === 200) {
-        alert("작성이 완료되었습니다");
         return response.data;
       }
     })
@@ -24,4 +21,4 @@ function createCommentApi(boardId, content, accesstoken) {
     });
 }
 
-export default createCommentApi;
+export default findUserDetailsApi;
