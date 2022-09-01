@@ -98,6 +98,7 @@ public class UserServiceImpl implements UserService{
         log.info("password : {}" , password);
 
         User user = userRepository.findByEmail(email).orElseThrow(CEmailSigninFailedException::new);
+        String city = user.getCity();
         log.info(user.toString());
         if (!encoder.matches(password, user.getPassword())) {
             log.info("비밀번호 다름");
@@ -113,6 +114,7 @@ public class UserServiceImpl implements UserService{
                         .token(jwtTokenProvider.createToken(String.valueOf(user.getEmail()), user.getRoles()))
                         .userId(user.getId())
                         .nickName(user.getNickName())
+                        .city(city)
                         .build()
         );
     }
