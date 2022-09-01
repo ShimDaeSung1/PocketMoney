@@ -181,7 +181,7 @@ public class BoardService {
     @Transactional
     public BoardResponseListDto boardSearchList(String str, int num)
     {
-        log.info("search list");
+        log.info("search list " + str);
         List<Board> boards = (List<Board>) boardRepository.searchBoards(str);
         if(boards == null) {
             return new BoardResponseListDto(null, 1,1, false, false);
