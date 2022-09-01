@@ -132,12 +132,21 @@ public class UserServiceImpl implements UserService{
         if(user2 != null) {
             throw new CNickNameSignupFailedException();
         }
+
+        try {
+            Double.parseDouble(signupUserDTO.getAge());
+            Integer.parseInt(signupUserDTO.getAge());
+        } catch(NumberFormatException e) {
+            throw new CNotNumberException("나이는 숫자 및 정수형만 입력 가능합니다.");
+            //log.info(e.getMessage());
+        }
+
         userRepository.save(User.builder()
                 .userName(signupUserDTO.getUserName())
                 .nickName(signupUserDTO.getNickName())
                 .password(encoder.encode(signupUserDTO.getPassword()))
                 .email(signupUserDTO.getEmail())
-                .age(signupUserDTO.getAge())
+                .age(Integer.parseInt(signupUserDTO.getAge()))
                 .city(signupUserDTO.getCity())
                 .sex(signupUserDTO.getSex())
                 .roles(Collections.singletonList("ROLE_USER"))

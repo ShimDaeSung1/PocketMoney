@@ -6,9 +6,7 @@ import com.web.pocketmoney.dto.board.*;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.board.BoardRepository;
 import com.web.pocketmoney.entity.user.User;
-import com.web.pocketmoney.exception.CBoardIdFailedException;
-import com.web.pocketmoney.exception.CNoBoardAndUserException;
-import com.web.pocketmoney.exception.CNotSameUserException;
+import com.web.pocketmoney.exception.*;
 import com.web.pocketmoney.exception.handler.ErrorCode;
 import com.web.pocketmoney.service.aws.S3Delete;
 import com.web.pocketmoney.service.aws.S3Uploader;
@@ -16,6 +14,7 @@ import com.web.pocketmoney.vo.CriteriaVo;
 import com.web.pocketmoney.vo.PageVo;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import net.bytebuddy.asm.Advice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,7 +22,9 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.mail.Multipart;
 import java.io.IOException;
+import java.time.DateTimeException;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,10 +39,8 @@ public class BoardService {
     @Transactional
     public BoardResponseDto save(User user, BoardRequestDto dto, MultipartFile file) throws IOException {
         log.info(1);
-        int[] date = dto.getDate();
-        log.info(2);
-        LocalDateTime dateTime = LocalDateTime.of(date[0], date[1], date[2], date[3], date[4], 0,0);
-        log.info(3);
+        LocalDateTime dateTime = checkDate(dto.getDate());
+        checkPay(dto.getPay());
         S3UploadResponseDto s3Dto = new S3UploadResponseDto(null, null);
         if(file != null) {
             S3UploadResponseDto tmp = s3Uploader.uploadFiles(file, "board", user);
@@ -50,13 +49,14 @@ public class BoardService {
             log.info("tmp : " + tmp.getKey() + " " + tmp.getPath());
             log.info("s3 : " + s3Dto.getKey() + " " + s3Dto.getPath());
         }
+
         boardRepository.save(Board.builder()
                         .area(dto.getArea())
                         .content(dto.getContent())
                         .dayOfWeek(dto.getDayOfWeek())
                         .user(user)
                         .title(dto.getTitle())
-                        .pay(dto.getPay())
+                        .pay(Integer.parseInt(dto.getPay()))
                         .wantedTime(dateTime)
                         .fileKey(s3Dto.getKey())
                         .filePath(s3Dto.getPath())
@@ -66,7 +66,7 @@ public class BoardService {
         return BoardResponseDto.builder()
                 .nickName(user.getNickName())
                 .area(dto.getArea())
-                .pay(dto.getPay())
+                .pay(Integer.parseInt(dto.getPay()))
                 .dayOfWeek(dto.getDayOfWeek())
                 .title(dto.getTitle())
                 .content(dto.getContent())
@@ -82,12 +82,13 @@ public class BoardService {
         if(user.getId() != board.getUser().getId()) {
             throw new CNotSameUserException();
         }
-        int[] arr = dto.getDate();
-        LocalDateTime dateTime = LocalDateTime.of(arr[0], arr[1], arr[2], arr[3], arr[4]);
+        LocalDateTime dateTime = checkDate(dto.getDate());
+        checkPay(dto.getPay());
+
         board.setArea(dto.getArea());
         board.setContent(dto.getContent());
         board.setDayOfWeek(dto.getDayOfWeek());
-        board.setPay(dto.getPay());
+        board.setPay(Integer.parseInt(dto.getPay()));
         board.setTitle(dto.getTitle());
         board.setWantedTime(dateTime);
         String nickName = user.getNickName();
@@ -107,7 +108,7 @@ public class BoardService {
                 .title(dto.getTitle())
                 .content(dto.getContent())
                 .dayOfWeek(dto.getDayOfWeek())
-                .pay(dto.getPay())
+                .pay(Integer.parseInt(dto.getPay()))
                 .fileKey(board.getFileKey())
                 .filePath(board.getFilePath())
                 .build();
@@ -181,7 +182,7 @@ public class BoardService {
     @Transactional
     public BoardResponseListDto boardSearchList(String str, int num)
     {
-        log.info("search list");
+        log.info("search list " + str);
         List<Board> boards = (List<Board>) boardRepository.searchBoards(str);
         if(boards == null) {
             return new BoardResponseListDto(null, 1,1, false, false);
@@ -228,5 +229,44 @@ public class BoardService {
         }
         BoardResponseListDto boardResponseListDto = new BoardResponseListDto(bd, start, end, page.isPrev(), page.isNext());
         return boardResponseListDto;
+    }
+
+    public LocalDateTime checkDate(String[] dates) {
+        int[] date = new int[5];
+
+       /* try {
+            for(int i=0;i<dates.length;i++) {
+                Double.parseDouble(dates[i]);
+                Integer.parseInt(dates[i]);
+            }
+        } catch(NumberFormatException e) {
+            throw new CNotNumberException("날짜 및 시간은 정수형만 가능합니다.");
+        }*/
+        LocalDateTime nowTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
+        int nowYear = nowTime.getYear();
+        log.info(2);
+        LocalDateTime dateTime;
+        try {
+            dateTime = LocalDateTime.of(Integer.parseInt(dates[0]), Integer.parseInt(dates[1]), Integer.parseInt(dates[2]), Integer.parseInt(dates[3]),Integer.parseInt(dates[4]), 0, 0);
+        } catch(DateTimeException e) {
+            throw new CNotRangeException("정확한 시간 형식이 아닙니다.");
+        } catch(NumberFormatException e) {
+            throw new CNotNumberException("날짜/시간은 정수형만 입력 가능합니다.");
+        }
+        log.info(3);
+
+        if(nowTime.isAfter(dateTime)) {
+            throw new CNotRangeException("과거는 입력할 수 없습니다.");
+        }
+
+        return dateTime;
+    }
+
+    public void checkPay(String pay) {
+        try {
+            Integer.parseInt(pay);
+        } catch(NumberFormatException e) {
+            throw new CNotNumberException("시급은 정수형태만 입력이 가능합니다.");
+        }
     }
 }

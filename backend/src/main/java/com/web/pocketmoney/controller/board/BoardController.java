@@ -65,6 +65,7 @@ public class BoardController {
     @GetMapping("/list/{search}/{num}")
     public ResponseEntity<BoardResponseListDto> boardSearch(@PathVariable("search") String str, @PathVariable("num") int num)
     {
+        log.info(str + " " + num);
         return ResponseEntity.ok(boardService.boardSearchList(str, num));
     }
 
