@@ -16,7 +16,7 @@ public class SignupUserDTO {
     private String password;
     private String sex;
     private String nickName;
-    private int age;
+    private String age;
     private String city;
     private List<String> roles = new ArrayList<>();
 }

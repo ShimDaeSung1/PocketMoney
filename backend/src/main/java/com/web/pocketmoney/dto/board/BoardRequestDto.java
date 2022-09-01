@@ -10,7 +10,7 @@ public class BoardRequestDto {
     private String content;
     private String area;
     private List<Integer> dayOfWeek;
-    private int[] date = new int[5]; // year, month, day, hour, minute
-    private int pay;
+    private String[] date = new String[5]; // year, month, day, hour, minute
+    private String pay;
    // private User user;
 }
