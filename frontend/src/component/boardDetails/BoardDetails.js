@@ -79,6 +79,7 @@ const BoardDetails = () => {
   const [commentPage, setCommentPage] = useState(1);
   const [comments, setComments] = useState();
 
+  console.log(data);
   const match = () => {
     createRoomApi(boardId, data.title, accesstoken).then((resp) => {
       if (!resp) {

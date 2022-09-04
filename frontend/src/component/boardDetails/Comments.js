@@ -73,7 +73,6 @@ function Comments(props) {
     <CommentBox>
       {props.comments
         ? props.comments.comments.map((comment, idx) => {
-            console.log(comment.timestamp);
             let date = new Date(comment.timestamp);
 
             return (

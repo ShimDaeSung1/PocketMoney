@@ -180,14 +180,10 @@ function BoardWrite() {
                 day.length &&
                 hour.length &&
                 minute.length &&
-                pay.length &&
-                imageUrl
+                pay.length
               ) {
                 const bodyFormData = new FormData();
-                bodyFormData.append("images", imageUrl);
-                writeBoardImgApi(bodyFormData, accessToken).then((resp) => {
-                  console.log(resp);
-                });
+                bodyFormData.append("file", imageUrl);
                 writeBoardApi(
                   title,
                   content,
@@ -200,7 +196,8 @@ function BoardWrite() {
                   minute,
                   pay,
                   accessToken,
-                  navigate
+                  navigate,
+                  bodyFormData
                 );
               } else {
                 alert("빈칸을 다 채워주세요");

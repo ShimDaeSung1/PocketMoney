@@ -65,7 +65,7 @@ function DefaultPage() {
 
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const city = sessionStorage.getItem(MYCITY);
-
+  console.log(boards);
   useEffect(() => {
     if (search) {
       searchBoardApi(sword, num).then((dataPromise) => {
