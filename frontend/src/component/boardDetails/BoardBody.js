@@ -8,7 +8,6 @@ const ContentBox = styled.div`
 const SubInf = styled.div`
   margin: 10px auto;
   width: 1000px;
-  border: 5px solid blue;
 `;
 const Writer = styled.div`
   display: inline-block;
@@ -50,11 +49,10 @@ const DateOfView = styled.div`
 `;
 
 const Content = styled.div`
-  margin: 0 auto;
+  margin: 50px auto;
   width: 1000px;
-  height: 400px;
+  min-height: 200px;
   overflow: auto;
-  border: 5px solid blue;
 `;
 
 function BoardBody(props) {

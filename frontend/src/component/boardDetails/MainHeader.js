@@ -1,9 +1,8 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
-import searchBoardApi from "./../../api/board/SearchBoardApi";
 
 const Header = styled.div`
   min-width: 1050px;
@@ -33,47 +32,32 @@ const Logo = styled.div`
   cursor: pointer;
 `;
 const RightHeader = styled.div`
-  margin-left: auto;
   margin-top: 5px;
   width: 50%;
-  text-align: center;
+  text-align: right;
   font-size: 20px;
   height: 30px;
-`;
-const Search = styled.div`
-  display: inline-block;
-  width: 250px;
-  background: rgb(200, 200, 200);
-`;
-const Searchinput = styled.input`
-  width: 200px;
-  height: 25px;
-  border: none;
-  background: none;
-`;
-const Serachsubmit = styled.button`
-  border: none;
-  background: none;
 `;
 const Login = styled.div`
   display: inline-block;
   margin-left: 5px;
   width: 100px;
   cursor: pointer;
+  text-align: center;
   border: 1px solid rgb(200, 200, 200);
 `;
 const SignUp = styled.div`
   display: inline-block;
-  margin-left: 20px;
   width: 100px;
   cursor: pointer;
+  text-align: center;
   border: 1px solid rgb(200, 200, 200);
 `;
 const Mypage = styled.div`
   display: inline-block;
-  margin-left: 20px;
   width: 100px;
   cursor: pointer;
+  text-align: center;
   border: 1px solid rgb(200, 200, 200);
 `;
 const Logout = styled.div`
@@ -81,30 +65,14 @@ const Logout = styled.div`
   margin-left: 5px;
   width: 100px;
   cursor: pointer;
+  text-align: center;
   border: 1px solid rgb(200, 200, 200);
 `;
 
-function MainHeader(props) {
+function MainHeader() {
   const navigate = useNavigate();
   const token = sessionStorage.getItem(ACCESS_TOKEN);
 
-  const search = () => {
-    if (!props.sword.length) {
-      alert("검색어를 입력해주세요");
-    } else {
-      searchBoardApi(props.sword, 1).then((dataPromise) => {
-        props.setBoards(dataPromise);
-      });
-      props.setSearch(true);
-      props.setNotDefault(true);
-      props.setNum(1);
-    }
-  };
-  const enterKey = () => {
-    if (window.event.keyCode === 13) {
-      search();
-    }
-  };
   return (
     <Header>
       <HeaderInside>
@@ -116,27 +84,6 @@ function MainHeader(props) {
           PocketMoney
         </Logo>
         <RightHeader>
-          <Search>
-            <Searchinput
-              type="text"
-              value={props.sword}
-              onChange={(e) => props.setSword(e.target.value.trim())}
-              onKeyUp={enterKey}
-            />
-            <Serachsubmit>
-              <img
-                src="/search.png"
-                alt="my image"
-                style={{
-                  marginTop: "5px",
-                  width: "20px",
-                  height: "20px",
-                  cursor: "pointer",
-                }}
-                onClick={search}
-              />
-            </Serachsubmit>
-          </Search>
           {token === null ? (
             <>
               <SignUp

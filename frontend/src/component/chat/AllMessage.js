@@ -65,6 +65,9 @@ function AllMessage(props) {
   };
 
   function selectOneChatRoom(id) {
+    if (props.chatInf !== null) {
+      props.stomps.disconnect();
+    }
     findChttingRoomApi(id, accesstoken).then((resp) => {
       props.setChatInf(resp);
       props.setMessages(resp.messageDetailDtoList);

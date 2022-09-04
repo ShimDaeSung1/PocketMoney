@@ -13,7 +13,8 @@ function writeBoardApi(
   minute,
   pay,
   accessToken,
-  navigate
+  navigate,
+  bodyFormData
 ) {
   const config = {
     headers: {
@@ -28,8 +29,15 @@ function writeBoardApi(
     date: [year, month, day, hour, minute],
     pay: pay,
   };
+
+  bodyFormData.append(
+    "board",
+    new Blob([JSON.stringify(body)], {
+      type: "application/json",
+    })
+  );
   return axios
-    .post(BACKEND_ADDRESS + "/boards/", body, config)
+    .post(BACKEND_ADDRESS + "/boards/", bodyFormData, config)
     .then((response) => {
       if (response.status === 200) {
         alert("작성이 완료되었습니다");

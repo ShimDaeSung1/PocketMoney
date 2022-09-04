@@ -73,7 +73,10 @@ function Numbers(props) {
           if (props.num === index) {
             return (
               <NumberButton
-                style={{ backgroundColor: "lightskyblue" }}
+                style={{
+                  backgroundColor: "rgb(200, 200, 200)",
+                  fontWeight: "bold",
+                }}
                 onClick={() => {
                   props.setNum(index);
                 }}

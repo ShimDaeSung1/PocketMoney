@@ -2,9 +2,11 @@ import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import AllMessage from "./AllMessage";
 import DefaultRoom from "./DefaultRoom";
+import $ from "jquery";
 import SockJS from "sockjs-client";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
 import { Stomp } from "stompjs/lib/stomp.js";
+import { useNavigate } from "react-router";
 
 const Outside = styled.div`
   display: flex;
@@ -96,7 +98,8 @@ function ChattingRoom(props) {
   const [messages, setMessages] = useState([]);
   const msgRef = useRef();
   const sendRef = useRef();
-  console.log(messages);
+  const navigate = useNavigate();
+  const [stomps, setStomps] = useState();
 
   useEffect(() => {
     document.getElementById("chatRoom").scrollTop =
@@ -105,7 +108,7 @@ function ChattingRoom(props) {
       //1. SockJS를 내부에 들고있는 stomp를 내어줌
       const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
       const stomp = Stomp.over(sockJs);
-      if (sockJs.connected) sockJs.deactivate();
+      setStomps(stomp);
       let roomName = chatInf.name;
       let roomId = chatInf.id;
       let username = chatInf.nickName;
@@ -116,12 +119,27 @@ function ChattingRoom(props) {
         //4. subscribe(path, callback)으로 메세지를 받을 수 있음
         stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
           let content = JSON.parse(chat.body);
+          console.log(content);
           let writer = content.writer;
+          let message = content.message;
           let str = "";
           let today = new Date();
 
           if (writer === username) {
             alert("내가 썼다");
+            // str +=
+            //   '<div style="border-radius: 15px;margin: 10px;' +
+            //   "background-color: Yellow;padding-left: 10px;margin-left:" +
+            //   'auto;">' +
+            //   '<div style="min-width: 200px;' +
+            //   "max-width: 500px;" +
+            //   "min-height: 40px;" +
+            //   "font-size: 25px;" +
+            //   'white-space: pre-line;">' +
+            //   message +
+            //   "</div>" +
+            //   "</div>";
+            // $("#chatRoom").append(str);
           } else {
             alert("내가 안썼다");
           }
@@ -158,7 +176,9 @@ function ChattingRoom(props) {
       <AllMessage
         roomList={props.roomList}
         setChatInf={setChatInf}
+        chatInf={chatInf}
         setMessages={setMessages}
+        stomps={stomps}
       />
       {/* <DefaultRoom /> */}
       <ChatBox>

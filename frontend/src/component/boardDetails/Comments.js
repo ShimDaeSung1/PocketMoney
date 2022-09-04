@@ -1,16 +1,15 @@
-import React, { useEffect } from "react";
+import React from "react";
 import styled from "styled-components";
 import CommentsNumbers from "./CommentsNumbers";
 import CommentWrite from "./CommentWrite";
 import deleteCommentApi from "./../../api/comment/DeleteCommentApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
-import findCommentApi from "./../../api/comment/FindCommentApi";
 const CommentBox = styled.div`
   margin: 10px auto;
   width: 1000px;
   height: 400px;
   overflow: auto;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 
 const Comment = styled.div`
@@ -20,7 +19,7 @@ const Comment = styled.div`
   width: 900px;
   min-height: 100px;
   overflow: auto;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 const Header = styled.div``;
 const Writer = styled.div`
@@ -73,7 +72,6 @@ function Comments(props) {
     <CommentBox>
       {props.comments
         ? props.comments.comments.map((comment, idx) => {
-            console.log(comment.timestamp);
             let date = new Date(comment.timestamp);
 
             return (

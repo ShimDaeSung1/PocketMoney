@@ -22,36 +22,43 @@ const Outside = styled.div`
 const TitleLogo = styled.div`
   width: 1050px;
   height: 250px;
-  background-color: lightgreen;
+  background-color: rgb(168, 239, 246);
+  margin-bottom: 10px;
   font-size: 50px;
   line-height: 250px;
   text-align: center;
+  font-weight: 500;
 `;
 const EntireWork = styled.div`
   display: inline-block;
-  width: 525px;
+  width: 520px;
+  margin-right: 10px;
   height: 250px;
-  background-color: lightBlue;
+  background-color: rgb(168, 239, 246);
   font-size: 50px;
   line-height: 250px;
   text-align: center;
+  font-weight: 500;
 `;
 const LocalWork = styled.div`
   display: inline-block;
-  width: 525px;
+  width: 520px;
   height: 250px;
-  background-color: yellow;
+  background-color: rgb(168, 239, 246);
   font-size: 50px;
   line-height: 250px;
   text-align: center;
+  font-weight: 500;
 `;
 const FindWork = styled.div`
   width: 1050px;
+  margin-top: 10px;
   height: 250px;
-  background-color: pink;
+  background-color: rgb(168, 239, 246);
   font-size: 50px;
   line-height: 250px;
   text-align: center;
+  font-weight: 500;
 `;
 
 function DefaultPage() {
@@ -65,7 +72,7 @@ function DefaultPage() {
 
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const city = sessionStorage.getItem(MYCITY);
-
+  console.log(boards);
   useEffect(() => {
     if (search) {
       searchBoardApi(sword, num).then((dataPromise) => {

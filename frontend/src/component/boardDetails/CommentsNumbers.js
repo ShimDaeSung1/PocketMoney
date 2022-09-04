@@ -74,7 +74,10 @@ function CommentsNumbers(props) {
           if (props.commentPage === index) {
             return (
               <NumberButton
-                style={{ backgroundColor: "lightskyblue" }}
+                style={{
+                  backgroundColor: "rgb(200, 200, 200)",
+                  fontWeight: "bold",
+                }}
                 onClick={() => {
                   props.setCommentPage(index);
                 }}

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
-import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
+import { ACCESS_TOKEN, MYCITY } from "./../../constant/LocalStorage";
 
 function loginApi(email, password, navigate) {
   const body = {
@@ -13,6 +13,7 @@ function loginApi(email, password, navigate) {
     .then((response) => {
       if (response.status === 200) {
         alert("로그인이 완료되었습니다.");
+        sessionStorage.setItem(MYCITY, response.data.data.city);
         sessionStorage.setItem(ACCESS_TOKEN, response.data.data.token);
         navigate("/");
       }
