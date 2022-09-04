@@ -9,6 +9,7 @@ import deleteBoardApi from "../../api/board/DeleteBoardApi";
 import findCommentApi from "./../../api/comment/FindCommentApi";
 import CommentWrite from "./CommentWrite";
 import createRoomApi from "./../../api/chat/CreateRoomApi";
+import ImportantStart from "./ImportantStart";
 
 const Outside = styled.div`
   width: 1050px;
@@ -75,6 +76,7 @@ const BoardDetails = () => {
   const params = useParams();
   const boardId = params.boardId;
   const [data, setDate] = useState();
+  const [wish, setWish] = useState(false);
 
   const [commentPage, setCommentPage] = useState(1);
   const [comments, setComments] = useState();
@@ -95,6 +97,7 @@ const BoardDetails = () => {
         navigate("/");
       }
       setDate(dataPromise);
+      //setWish(dataPromise.wish)
     });
   }, []);
 
@@ -118,6 +121,12 @@ const BoardDetails = () => {
           {data ? (
             data.isUser === "USER" ? (
               <>
+                <ImportantStart
+                  data={data}
+                  accesstoken={accesstoken}
+                  wish={wish}
+                  setWish={setWish}
+                />
                 <EditButton
                   onClick={() => {
                     navigate("/board/write/modify/" + boardId, {
