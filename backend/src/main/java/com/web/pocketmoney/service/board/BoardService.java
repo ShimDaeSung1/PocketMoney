@@ -6,6 +6,8 @@ import com.web.pocketmoney.dto.board.*;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.board.BoardRepository;
 import com.web.pocketmoney.entity.user.User;
+import com.web.pocketmoney.entity.wish.Wish;
+import com.web.pocketmoney.entity.wish.WishRepository;
 import com.web.pocketmoney.exception.*;
 import com.web.pocketmoney.exception.handler.ErrorCode;
 import com.web.pocketmoney.service.aws.S3Delete;
@@ -33,6 +35,7 @@ import java.util.List;
 @Log4j2
 public class BoardService {
     private final BoardRepository boardRepository;
+    private final WishRepository wishRepository;
     private final S3Delete s3Delete;
     private final S3Uploader s3Uploader;
 
@@ -159,7 +162,7 @@ public class BoardService {
     }
 
     @Transactional
-    public BoardResponseListDto boardList(int num)
+    public BoardResponseListDto boardList(User user, int num)
     {
         List<Board> boards = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
         if(boards == null) {
@@ -172,15 +175,22 @@ public class BoardService {
 
        List<BoardListDto> bd = new ArrayList<>();
        for(int i=page.getCri().getStart(); i<=page.getCri().getEnd(); i++) {
+           Boolean w = false;
+           if(user!=null) {
+               Wish wish = wishRepository.findByUserIdAndBoardId(user.getId(), boards.get(i).getId()).orElse(null);
+               if(wish != null) {
+                   w = true;
+               }
+           }
            bd.add(new BoardListDto(boards.get(i).getTitle(),
                    boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                   boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime()));
+                   boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
        }
        return new BoardResponseListDto(bd,page.getStartPage(), page.getEndPage(), page.isPrev(), page.isNext());
     }
 
     @Transactional
-    public BoardResponseListDto boardSearchList(String str, int num)
+    public BoardResponseListDto boardSearchList(User user, String str, int num)
     {
         log.info("search list " + str);
         List<Board> boards = (List<Board>) boardRepository.searchBoards(str);
@@ -191,22 +201,28 @@ public class BoardService {
         int total = boards.size();
         log.info("total : " + total);
         PageVo page = new PageVo(new CriteriaVo(num,10, total), total);
-
         int start = page.getStartPage();
         int end = page.getEndPage();
 
         List<BoardListDto> bd = new ArrayList<>();
         for(int i=page.getCri().getStart(); i<=page.getCri().getEnd(); i++) {
+            Boolean w = false;
+            if(user!=null) {
+                Wish wish = wishRepository.findByUserIdAndBoardId(user.getId(), boards.get(i).getId()).orElse(null);
+                if(wish != null) {
+                    w = true;
+                }
+            }
             bd.add(new BoardListDto(boards.get(i).getTitle(),
                     boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime()));
+                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
         }
         BoardResponseListDto boardResponseListDto = new BoardResponseListDto(bd, start, end, page.isPrev(), page.isNext());
         return boardResponseListDto;
     }
 
     @Transactional
-    public BoardResponseListDto boardSearchListByCity(String str, int num)
+    public BoardResponseListDto boardSearchListByCity(User user, String str, int num)
     {
         log.info("search list");
         List<Board> boards = (List<Board>) boardRepository.searchBoardByArea(str);
@@ -223,9 +239,16 @@ public class BoardService {
 
         List<BoardListDto> bd = new ArrayList<>();
         for(int i=page.getCri().getStart(); i<=page.getCri().getEnd(); i++) {
+            Boolean w = false;
+            if(user!=null) {
+                Wish wish = wishRepository.findByUserIdAndBoardId(user.getId(), boards.get(i).getId()).orElse(null);
+                if(wish != null) {
+                    w = true;
+                }
+            }
             bd.add(new BoardListDto(boards.get(i).getTitle(),
                     boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime()));
+                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
         }
         BoardResponseListDto boardResponseListDto = new BoardResponseListDto(bd, start, end, page.isPrev(), page.isNext());
         return boardResponseListDto;

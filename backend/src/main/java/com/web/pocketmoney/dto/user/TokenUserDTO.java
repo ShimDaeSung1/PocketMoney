@@ -12,5 +12,6 @@ import lombok.NoArgsConstructor;
 public class TokenUserDTO {
     private String token;
     private Long userId;
+    private String city;
     private String nickName;
 }

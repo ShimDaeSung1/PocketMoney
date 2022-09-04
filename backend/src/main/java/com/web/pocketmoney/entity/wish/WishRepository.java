@@ -8,6 +8,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.security.core.parameters.P;
 
+import java.util.Optional;
+
 public interface WishRepository extends JpaRepository<Wish, Long> {
 
     // 내 관심 구인글 목록 + 게시판 제목 같이 가져오기
@@ -16,6 +18,8 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
             " where w.userId = : userId")
     Object getWishByUserId(@Param("userId") Long userId);
 
+    @Query("select w from Wish w where w.userId = userId and w.boardId = boardId")
+    Optional<Wish> findByUserIdAndBoardId(@Param("userId") Long userId, @Param("boardId") Long boardId);
 //    @Query("select w, b.title, u.email " +
 //            " from Wish w left join Board b on b.id = w" +
 //            " left join User u" +

@@ -17,8 +17,9 @@ public class BoardListDto {
     private String city;
     private Long boardId;
     private LocalDateTime wantedTime;
+    private Boolean wish;
 
-    public BoardListDto(String title, int view, Timestamp createTime, String city, int pay, Long boardId, LocalDateTime wantedTime) {
+    public BoardListDto(String title, int view, Timestamp createTime, String city, int pay, Long boardId, LocalDateTime wantedTime, Boolean wish) {
         this.title = title;
         this.view = view;
         this.createTime = createTime;
@@ -26,5 +27,6 @@ public class BoardListDto {
         this.pay = pay;
         this.boardId = boardId;
         this.wantedTime = wantedTime;
+        this.wish = wish;
     }
 }
