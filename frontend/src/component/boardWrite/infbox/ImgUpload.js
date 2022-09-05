@@ -10,7 +10,7 @@ const UploadButton = styled.div`
   margin-right: 40px;
   margin-left: auto;
   cursor: pointer;
-  background-color: lightGreen;
+  background-color: rgb(24, 191, 230);
 `;
 
 function ImgUpload(props) {

@@ -13,7 +13,7 @@ const Outside = styled.div`
   width: 1050px;
   height: 400px;
   margin: 10px auto;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
   overflow: auto;
 `;
 const MyInf = styled.div`

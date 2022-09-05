@@ -10,19 +10,18 @@ import Date from "./infbox/Date";
 import ImgUpload from "./infbox/ImgUpload";
 import writeBoardApi from "./../../api/board/WriteBoardApi";
 import editBoardApi from "../../api/board/EditBoardApi";
-import writeBoardImgApi from "./../../api/board/WriteBoardImgApi";
 
 const Outside = styled.div`
   width: 800px;
   margin: 0 auto;
-  border: 1px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 const WriteButton = styled.div`
   width: 200px;
   height: 50px;
   margin: 5px auto;
   font-size: 30px;
-  background-color: lightGreen;
+  background-color: rgb(24, 191, 230);
   text-align: center;
   line-height: 50px;
   cursor: pointer;
@@ -51,7 +50,7 @@ const StyledInput = styled.input`
   background-color: #00000000;
   height: 30px;
   margin-right:10px;
-  border: 1px solid gray;
+  border: 1px solid rgb(200, 200, 200);
   &:focus {
     InfBox: 2px solid rgb(90, 155, 213);
     border: 1px solid rgb(90, 155, 213);

@@ -8,7 +8,7 @@ const WishContentStyle = styled.div`
   margin-bottom: 6px;
   margin-left: 10px;
   font-size: 40px;
-  border-bottom: 2px solid rgb(90, 155, 213);
+  border-bottom: 2px solid rgb(200, 200, 200);
   cursor: pointer;
 `;
 
