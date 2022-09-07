@@ -94,99 +94,118 @@ function ChattingRoom(props) {
       writingRef.current.scrollHeight - 18 + "px";
   }, []);
 
-  const [chatInf, setChatInf] = useState(null);
-  const [messages, setMessages] = useState([]);
   const msgRef = useRef();
   const sendRef = useRef();
   const navigate = useNavigate();
   const [stomps, setStomps] = useState();
 
   useEffect(() => {
-    document.getElementById("chatRoom").scrollTop =
-      document.getElementById("chatRoom").scrollHeight;
-    if (chatInf !== null) {
-      //1. SockJS를 내부에 들고있는 stomp를 내어줌
-      const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
-      const stomp = Stomp.over(sockJs);
-      setStomps(stomp);
-      let roomName = chatInf.name;
-      let roomId = chatInf.id;
-      let username = chatInf.nickName;
+    //1. SockJS를 내부에 들고있는 stomp를 내어줌
+    const sockJs = new SockJS(BACKEND_ADDRESS + "/stomp/chat");
+    const stomp = Stomp.over(sockJs);
 
-      //2. connection이 맺어지면 실행
-      stomp.connect({}, function () {
-        console.log("STOMP Connection");
-        //4. subscribe(path, callback)으로 메세지를 받을 수 있음
-        stomp.subscribe("/sub/chat/room/" + roomId, function (chat) {
-          let content = JSON.parse(chat.body);
-          console.log(content);
-          let writer = content.writer;
-          let message = content.message;
-          let str = "";
-          let today = new Date();
+    //2. connection이 맺어지면 실행
+    stomp.connect({}, function () {
+      document.getElementById("chatRoom").scrollTop =
+        document.getElementById("chatRoom").scrollHeight;
 
-          if (writer === username) {
-            alert("내가 썼다");
-            // str +=
-            //   '<div style="border-radius: 15px;margin: 10px;' +
-            //   "background-color: Yellow;padding-left: 10px;margin-left:" +
-            //   'auto;">' +
-            //   '<div style="min-width: 200px;' +
-            //   "max-width: 500px;" +
-            //   "min-height: 40px;" +
-            //   "font-size: 25px;" +
-            //   'white-space: pre-line;">' +
-            //   message +
-            //   "</div>" +
-            //   "</div>";
-            // $("#chatRoom").append(str);
-          } else {
-            alert("내가 안썼다");
-          }
-        });
+      console.log("STOMP Connection");
+      //4. subscribe(path, callback)으로 메세지를 받을 수 있음
+      stomp.subscribe("/sub/chat/room/" + props.roomId, function (chat) {
+        let content = JSON.parse(chat.body);
+        console.log(content);
+        let writer = content.writer;
+        let message = content.message;
+        let str = "";
+        let today = new Date();
 
-        //3. send(path, header, message)로 메세지를 보낼 수 있음
-        stomp.send(
-          "/pub/chat/enter",
-          {},
-          JSON.stringify({ roomId: roomId, writer: username })
-        );
-      });
-
-      document.addEventListener("mousedown", function (event) {
-        if (sendRef.current.contains(event.target)) {
-          let msg = document.getElementById("msg");
-          stomp.send(
-            "/pub/chat/message",
-            {},
-            JSON.stringify({
-              roomId: roomId,
-              message: msg.value,
-              writer: username,
-            })
-          );
-          msg.value = "";
+        if (writer === props.username) {
+          str +=
+            '<div style="border-radius: 15px;margin: 10px;' +
+            "background-color: Yellow;padding-left: 10px;margin-left:" +
+            'auto;">' +
+            '<div style="min-width: 200px;' +
+            "max-width: 500px;" +
+            "min-height: 40px;" +
+            "font-size: 25px;" +
+            'white-space: pre-line;">' +
+            message +
+            "</div>" +
+            '<div style="font-size: 15px;">' +
+            (today.getYear() + 1900) +
+            "년" +
+            today.getMonth() +
+            "월" +
+            today.getDay() +
+            "일" +
+            today.getHours() +
+            "시" +
+            today.getMinutes() +
+            "분" +
+            "</div>" +
+            "</div>";
+          $("#chatRoom").append(str);
+        } else {
+          str +=
+            '<div style="border-radius: 15px;margin: 10px;' +
+            "background-color: lightBlue;padding-left: 10px;margin-right:" +
+            'auto;">' +
+            '<div style="min-width: 200px;' +
+            "max-width: 500px;" +
+            "min-height: 40px;" +
+            "font-size: 25px;" +
+            'white-space: pre-line;">' +
+            message +
+            "</div>" +
+            '<div style="font-size: 15px;">' +
+            (today.getYear() + 1900) +
+            "년" +
+            today.getMonth() +
+            "월" +
+            today.getDay() +
+            "일" +
+            today.getHours() +
+            "시" +
+            today.getMinutes() +
+            "분" +
+            "</div>" +
+            "</div>";
+          $("#chatRoom").append(str);
         }
+        document.getElementById("chatRoom").scrollTop =
+          document.getElementById("chatRoom").scrollHeight;
       });
-    }
-  }, [chatInf]);
+
+      //3. send(path, header, message)로 메세지를 보낼 수 있음
+      stomp.send(
+        "/pub/chat/enter",
+        {},
+        JSON.stringify({ roomId: props.roomId, writer: props.username })
+      );
+    });
+
+    setStomps(stomp);
+  }, [props.chatInf]);
+  console.log(props.chatInf);
 
   return (
     <Outside>
       <AllMessage
         roomList={props.roomList}
-        setChatInf={setChatInf}
-        chatInf={chatInf}
-        setMessages={setMessages}
+        setChatInf={props.setChatInf}
+        chatInf={props.chatInf}
+        setMessages={props.setMessages}
+        setRoomId={props.setRoomId}
+        setUsername={props.setUsername}
         stomps={stomps}
       />
       {/* <DefaultRoom /> */}
       <ChatBox>
         <ChatRoom id="chatRoom">
-          {chatInf
-            ? messages.map((inf) => {
+          {props.chatInf
+            ? props.messages.map((inf) => {
                 let date = new Date(inf.sendDate);
-                if (chatInf.userId === inf.writerId) {
+                if (props.chatInf.userId === inf.writerId) {
                   return (
                     <Myself>
                       <Content>{inf.message}</Content>
@@ -225,7 +244,24 @@ function ChattingRoom(props) {
               handleResizeHeight();
             }}
           />
-          <CommentWritingButton ref={sendRef}>{"등록"}</CommentWritingButton>
+          <CommentWritingButton
+            ref={sendRef}
+            onClick={() => {
+              let msg = document.getElementById("msg");
+              stomps.send(
+                "/pub/chat/message",
+                {},
+                JSON.stringify({
+                  roomId: props.roomId,
+                  message: msg.value,
+                  writer: props.username,
+                })
+              );
+              msg.value = "";
+            }}
+          >
+            등록
+          </CommentWritingButton>
         </Write>
       </ChatBox>
     </Outside>

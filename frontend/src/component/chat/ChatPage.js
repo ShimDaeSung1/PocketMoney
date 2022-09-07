@@ -2,9 +2,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import CancelButton from "../CancelButton";
 import ChattingRoom from "./ChattingRoom";
-import { useNavigate } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import findChattingListApi from "./../../api/chat/FindChattingListApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
+import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
 
 const Outside = styled.div`
   width: 1050px;
@@ -21,13 +22,29 @@ const Block = styled.div`
 
 function ChatPage() {
   const navigate = useNavigate();
+  const params = useParams();
+  const id = params.id;
   const [roomList, setRoomList] = useState();
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
+
+  const [chatInf, setChatInf] = useState(null);
+  const [messages, setMessages] = useState([]);
+  const [roomId, setRoomId] = useState();
+  const [username, setUsername] = useState();
 
   useEffect(() => {
     findChattingListApi(accesstoken).then((resp) => {
       setRoomList(resp);
     });
+    if (id) {
+      console.log("찾는중");
+      findChttingRoomApi(id, accesstoken).then((resp) => {
+        setChatInf(resp);
+        setRoomId(resp.id);
+        setUsername(resp.nickName);
+        setMessages(resp.messageDetailDtoList);
+      });
+    }
   }, []);
 
   return (
@@ -35,7 +52,13 @@ function ChatPage() {
       <CancelButton navigate={navigate} />
       <Block style={{ height: "50px" }}></Block>
       <Block></Block>
-      <ChattingRoom roomList={roomList} />
+      <ChattingRoom
+        roomList={roomList}
+        chatInf={chatInf}
+        messages={messages}
+        roomId={roomId}
+        username={username}
+      />
     </Outside>
   );
 }
