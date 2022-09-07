@@ -62,16 +62,17 @@ public class BoardController {
         return ResponseEntity.ok(boardService.boardList(user, num));
     }
 
-    @GetMapping("/list/{search}/{num}")
-    public ResponseEntity<BoardResponseListDto> boardSearch(@AuthenticationPrincipal User user, @PathVariable("search") String str, @PathVariable("num") int num)
+    @GetMapping("/listTitle/{num}")
+    public ResponseEntity<BoardResponseListDto> boardSearch(@AuthenticationPrincipal User user, @RequestParam("search") String str, @PathVariable("num") int num)
     {
-        log.info(str + " " + num);
+        log.info("search boards by title : " + str + " " + num);
         return ResponseEntity.ok(boardService.boardSearchList(user,str, num));
     }
 
-    @GetMapping("/listCity/{search}/{num}")
-    public ResponseEntity<BoardResponseListDto> boardSearchByArea(@AuthenticationPrincipal User user, @PathVariable("search") String str, @PathVariable("num") int num)
+    @GetMapping("/listCity/{num}")
+    public ResponseEntity<BoardResponseListDto> boardSearchByArea(@AuthenticationPrincipal User user, @RequestParam("search") String str, @PathVariable("num") int num)
     {
+        log.info("search board by of city : " + str);
         return ResponseEntity.ok(boardService.boardSearchListByCity(user, str, num));
     }
 }

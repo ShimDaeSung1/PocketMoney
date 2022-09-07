@@ -88,6 +88,7 @@ public class KakaoLoginController {
         kakaoLoginDto.setName(name);
         kakaoLoginDto.setAccessToken(accessToken);
         kakaoLoginDto.setJwtToken(token);
+        kakaoLoginDto.setCity(user.getCity());
         if(check) {
             kakaoLoginDto.setIsNew(true);
         }

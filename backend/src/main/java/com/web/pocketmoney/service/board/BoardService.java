@@ -195,7 +195,7 @@ public class BoardService {
            }
            bd.add(new BoardListDto(boards.get(i).getTitle(),
                    boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                   boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
+                   boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w, boards.get(i).getFilePath()));
        }
        return new BoardResponseListDto(bd,page.getStartPage(), page.getEndPage(), page.isPrev(), page.isNext());
     }
@@ -226,7 +226,7 @@ public class BoardService {
             }
             bd.add(new BoardListDto(boards.get(i).getTitle(),
                     boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
+                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w, boards.get(i).getFilePath()));
         }
         BoardResponseListDto boardResponseListDto = new BoardResponseListDto(bd, start, end, page.isPrev(), page.isNext());
         return boardResponseListDto;
@@ -259,7 +259,7 @@ public class BoardService {
             }
             bd.add(new BoardListDto(boards.get(i).getTitle(),
                     boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getArea(),
-                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w));
+                    boards.get(i).getPay(), boards.get(i).getId(), boards.get(i).getWantedTime(),w, boards.get(i).getFilePath()));
         }
         BoardResponseListDto boardResponseListDto = new BoardResponseListDto(bd, start, end, page.isPrev(), page.isNext());
         return boardResponseListDto;
@@ -268,14 +268,6 @@ public class BoardService {
     public LocalDateTime checkDate(String[] dates) {
         int[] date = new int[5];
 
-       /* try {
-            for(int i=0;i<dates.length;i++) {
-                Double.parseDouble(dates[i]);
-                Integer.parseInt(dates[i]);
-            }
-        } catch(NumberFormatException e) {
-            throw new CNotNumberException("날짜 및 시간은 정수형만 가능합니다.");
-        }*/
         LocalDateTime nowTime = LocalDateTime.now(ZoneId.of("Asia/Seoul"));
         int nowYear = nowTime.getYear();
         log.info(2);

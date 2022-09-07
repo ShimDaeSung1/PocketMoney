@@ -18,8 +18,9 @@ public class BoardListDto {
     private Long boardId;
     private LocalDateTime wantedTime;
     private Boolean wish;
+    private String filePath;
 
-    public BoardListDto(String title, int view, Timestamp createTime, String city, int pay, Long boardId, LocalDateTime wantedTime, Boolean wish) {
+    public BoardListDto(String title, int view, Timestamp createTime, String city, int pay, Long boardId, LocalDateTime wantedTime, Boolean wish, String filePath) {
         this.title = title;
         this.view = view;
         this.createTime = createTime;
@@ -28,5 +29,6 @@ public class BoardListDto {
         this.boardId = boardId;
         this.wantedTime = wantedTime;
         this.wish = wish;
+        this.filePath = filePath;
     }
 }
