@@ -21,5 +21,6 @@ public class BoardDto {
     private String nickName;
     private UserState isUser;
     private String filePath;
+    private Boolean wish;
     //private int isUser; //
 }
