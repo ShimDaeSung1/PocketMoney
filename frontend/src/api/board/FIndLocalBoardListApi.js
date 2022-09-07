@@ -7,9 +7,8 @@ function findLocalBoardListApi(city, accesstoken, num) {
       "X-AUTH-TOKEN": accesstoken,
     },
   };
-  console.log(city);
   return axios
-    .get(BACKEND_ADDRESS + "/listCity/" + city + "/" + num)
+    .get(BACKEND_ADDRESS + "boards/listCity/" + num + "?search=" + city, config)
     .then((response) => response.data)
     .catch((error) => {
       alert(error.response.data.message);

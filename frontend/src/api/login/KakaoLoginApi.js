@@ -5,7 +5,6 @@ import { ACCESS_TOKEN, MYCITY } from "./../../constant/LocalStorage";
 function kakaoLoginApi(code, navigate) {
   axios.post(BACKEND_ADDRESS + "/login/kakao?code=" + code).then((response) => {
     if (response.status === 200) {
-      console.log(response);
       sessionStorage.setItem(MYCITY, response.data.city);
       sessionStorage.setItem(ACCESS_TOKEN, response.data.jwtToken);
       if (response.data.isNew === true) {

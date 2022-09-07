@@ -76,11 +76,14 @@ const BoardDetails = () => {
 
   const params = useParams();
   const boardId = params.boardId;
-  const [data, setDate] = useState();
+  const [data, setData] = useState();
   const [wish, setWish] = useState(false);
 
   const [commentPage, setCommentPage] = useState(1);
   const [comments, setComments] = useState();
+
+  const imgurl =
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
 
   const match = () => {
     createRoomApi(boardId, data.title, accesstoken).then((resp) => {
@@ -96,7 +99,8 @@ const BoardDetails = () => {
         alert("존재하지 않는 구인 글 입니다!!!!");
         navigate("/");
       }
-      setDate(dataPromise);
+      setData(dataPromise);
+      setWish(dataPromise.wish);
       //setWish(dataPromise.wish)
     });
   }, []);
@@ -142,7 +146,15 @@ const BoardDetails = () => {
                 </DeleteButton>
               </>
             ) : data.isUser === "NOTUSER" ? (
-              <ConnectButton onClick={match}>연락하기</ConnectButton>
+              <React.Fragment>
+                <ImportantStart
+                  data={data}
+                  accesstoken={accesstoken}
+                  wish={wish}
+                  setWish={setWish}
+                />
+                <ConnectButton onClick={match}>연락하기</ConnectButton>
+              </React.Fragment>
             ) : (
               ""
             )
@@ -152,7 +164,7 @@ const BoardDetails = () => {
         </ContentHeader>
         <ContentImg>
           <img
-            src="https://pocketdon.s3.ap-northeast-2.amazonaws.com/board/85e6dc2d-1666-43c4-94b0-1484cdd9ba2atestlogo.JPG"
+            src={data ? (data.filePath ? data.filePath : imgurl) : ""}
             alt="my image"
             style={{
               width: "1000px",

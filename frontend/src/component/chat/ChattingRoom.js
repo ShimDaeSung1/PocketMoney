@@ -109,11 +109,9 @@ function ChattingRoom(props) {
       document.getElementById("chatRoom").scrollTop =
         document.getElementById("chatRoom").scrollHeight;
 
-      console.log("STOMP Connection");
       //4. subscribe(path, callback)으로 메세지를 받을 수 있음
       stomp.subscribe("/sub/chat/room/" + props.roomId, function (chat) {
         let content = JSON.parse(chat.body);
-        console.log(content);
         let writer = content.writer;
         let message = content.message;
         let str = "";
@@ -186,12 +184,12 @@ function ChattingRoom(props) {
 
     setStomps(stomp);
   }, [props.chatInf]);
-  console.log(props.chatInf);
 
   return (
     <Outside>
       <AllMessage
         roomList={props.roomList}
+        setRoomList={props.setRoomList}
         setChatInf={props.setChatInf}
         chatInf={props.chatInf}
         setMessages={props.setMessages}

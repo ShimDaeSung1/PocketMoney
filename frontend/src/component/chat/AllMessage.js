@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
+import searchchatRoomApi from "./../../api/chat/SearchChatRoomApi";
 
 const Outside = styled.div`
   width: 350px;
@@ -54,7 +55,10 @@ function AllMessage(props) {
     if (!sword.length) {
       alert("검색어를 입력해주세요");
     } else {
-      alert(sword);
+      searchchatRoomApi(sword, accesstoken).then((dataPromise) => {
+        props.setRoomList(dataPromise);
+      });
+
       setSword("");
     }
   };

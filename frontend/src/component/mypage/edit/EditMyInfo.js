@@ -57,6 +57,18 @@ function EditMyInfo() {
     window.location.href = "/login";
   }
   const navigate = useNavigate();
+
+  const checkOnlyOne = (checkThis) => {
+    const checkboxes = document.getElementsByName("sex");
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+      } else {
+        setSex(checkThis.value);
+      }
+    }
+  };
+
   return (
     <EditBox>
       <CancelButton navigate={navigate} />
@@ -89,11 +101,6 @@ function EditMyInfo() {
         placeholder={"나이"}
       />
       <StyledInput
-        value={sex}
-        onChange={(e) => setSex(e.target.value)}
-        placeholder={"성별"}
-      />
-      <StyledInput
         type="text"
         id="pInput"
         readOnly={true}
@@ -107,6 +114,50 @@ function EditMyInfo() {
           );
         }}
       />
+      <div
+        style={{
+          display: "inline-block",
+          width: "60px",
+          fontSize: "20px",
+          marginLeft: "-40px",
+        }}
+      >
+        성별:
+      </div>
+      <input
+        type="checkbox"
+        name="sex"
+        value={"남성"}
+        onChange={(e) => checkOnlyOne(e.target)}
+        style={{ display: "inline-block", width: "100px", height: "20px" }}
+      />{" "}
+      <div
+        style={{
+          display: "inline-block",
+          width: "40px",
+          fontSize: "20px",
+          marginLeft: "-40px",
+        }}
+      >
+        남
+      </div>
+      <input
+        type="checkbox"
+        name="sex"
+        value={"여성"}
+        onChange={(e) => checkOnlyOne(e.target)}
+        style={{ display: "inline-block", width: "100px", height: "20px" }}
+      />{" "}
+      <div
+        style={{
+          display: "inline-block",
+          width: "40px",
+          fontSize: "20px",
+          marginLeft: "-40px",
+        }}
+      >
+        여
+      </div>
       <EditButton
         onClick={() => {
           if (

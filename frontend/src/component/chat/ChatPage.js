@@ -37,7 +37,6 @@ function ChatPage() {
       setRoomList(resp);
     });
     if (id) {
-      console.log("찾는중");
       findChttingRoomApi(id, accesstoken).then((resp) => {
         setChatInf(resp);
         setRoomId(resp.id);
@@ -57,6 +56,7 @@ function ChatPage() {
         messages={messages}
         roomId={roomId}
         username={username}
+        setRoomList={setRoomList}
       />
     </Outside>
   );

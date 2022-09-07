@@ -13,7 +13,7 @@ const WishStart = styled.div`
   cursor: pointer;
 `;
 const ImportantStart = (props) => {
-  const color = props.wish ? "#ffd400" : "#ffd400";
+  const color = props.wish ? "#ffd400" : "#afafaf";
 
   return (
     <WishStart
