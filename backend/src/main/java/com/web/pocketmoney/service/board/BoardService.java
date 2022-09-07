@@ -135,16 +135,26 @@ public class BoardService {
     {
         Board board = boardRepository.findById(id).orElseThrow(CBoardIdFailedException::new);
         boardRepository.updateView(id);
+
         int isUser;
+        boolean wish = false;
         UserState state;
         if(user == null) {
             state = UserState.NOLOGIN;
         }
         else if(user.getId() != board.getUser().getId()) {
+            Wish isWish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId()).orElse(null);
+            if(isWish != null) {
+                wish = true;
+            }
             state = UserState.NOTUSER;
         }
         else {
             state = UserState.USER;
+            Wish isWish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId()).orElse(null);
+            if(isWish != null) {
+                wish = true;
+            }
         }
         return BoardDto.builder()
                 .dayOfWeek(board.getDayOfWeek())
@@ -158,6 +168,7 @@ public class BoardService {
                 .area(board.getArea())
                 .isUser(state)
                 .filePath(board.getFilePath())
+                .wish(wish)
         .build();
     }
 
