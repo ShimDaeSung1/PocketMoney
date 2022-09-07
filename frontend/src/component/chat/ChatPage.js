@@ -10,14 +10,14 @@ import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
 const Outside = styled.div`
   width: 1050px;
   margin: 10px auto;
-  border-top: 5px solid blue;
-  border-left: 5px solid blue;
-  border-right: 5px solid blue;
+  border-top: 1px solid rgb(200, 200, 200);
+  border-left: 1px solid rgb(200, 200, 200);
+  border-right: 1px solid rgb(200, 200, 200);
 `;
 const Block = styled.div`
   width: 1050px;
-  height: 100px;
-  border-bottom: 5px solid blue;
+  height: 50px;
+  border-bottom: 1px solid rgb(200, 200, 200);
 `;
 
 function ChatPage() {
@@ -50,7 +50,6 @@ function ChatPage() {
   return (
     <Outside>
       <CancelButton navigate={navigate} />
-      <Block style={{ height: "50px" }}></Block>
       <Block></Block>
       <ChattingRoom
         roomList={roomList}

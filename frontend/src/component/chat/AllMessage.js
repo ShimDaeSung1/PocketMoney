@@ -1,14 +1,13 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState } from "react";
 import styled from "styled-components";
-import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
   width: 350px;
   height: 500px;
   overflow: auto;
-  border-right: 5px solid blue;
+  border-right: 1px solid rgb(200, 200, 200);
 `;
 const Search = styled.div`
   width: 350px;
@@ -25,10 +24,11 @@ const Serachsubmit = styled.button`
   background: none;
 `;
 const Message = styled.div`
-  width: 350px;
+  margin: 5px;
+  width: 340px;
   height: 100px;
-  border-bottom: 5px solid blue;
-  background-color: lightBlue;
+  border-bottom: 1px solid rgb(200, 200, 200);
+  background-color: rgb(168, 239, 246);
 `;
 const Title = styled.div`
   width: 300px;
@@ -91,11 +91,15 @@ function AllMessage(props) {
       </Search>
       {props.roomList
         ? props.roomList.map((room) => {
+            let date = new Date(room.regDate);
             return (
               <Message onClick={() => selectOneChatRoom(room.id)}>
                 <Title>{room.name}</Title>
                 <User>{room.nickName}</User>
-                <LatestDate>{room.regDate}</LatestDate>
+                <LatestDate>
+                  {date.getYear() + 1900}년 {date.getMonth()}월 {date.getDay()}
+                  일 {date.getHours()}시 {date.getMinutes()}분
+                </LatestDate>
               </Message>
             );
           })

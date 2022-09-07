@@ -11,7 +11,7 @@ import { useNavigate } from "react-router";
 const Outside = styled.div`
   display: flex;
   width: 1050px;
-  border-bottom: 5px solid blue;
+  border-bottom: 1px solid rgb(200, 200, 200);
 `;
 const ChatBox = styled.div`
   width: 680px;
@@ -73,10 +73,10 @@ const CommentWritingButton = styled.button`
   width: 60px;
   margin-left: 5px;
   padding: 7px;
-  background: #333333;
-  color: #cccccc;
+  background: rgb(24, 191, 230);
   font-family: "Gowun Dodum", sans-serif;
   border-radius: 5px;
+  border: none;
 `;
 
 function ChattingRoom(props) {
