@@ -71,7 +71,7 @@ public class StompChatController {
 
         MessageDetailDto messageDetailDto = messageService.findOne(messageId, user.getId());
 
-        template.convertAndSend("/sub/chat/room" + message.getRoomId(), messageDetailDto);
+        template.convertAndSend("/sub/chat/room/" + message.getRoomId(), messageDetailDto);
     }
     //@MessageMapping을 통해 WebSocket으로 들어오는 메시지 발행을 처리한다. pub이 앞에 붙어 메시지를 전송한다는 뜻
     //MessageDetailDto형태로 받은 message안에는 roomId가 있으므로 어떤 채팅방에 뿌릴지 정해진다.

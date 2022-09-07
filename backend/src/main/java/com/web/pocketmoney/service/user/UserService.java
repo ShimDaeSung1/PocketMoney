@@ -6,6 +6,10 @@ import com.web.pocketmoney.model.SingleResult;
 
 public interface UserService {
 
+    //True시 카인드스코어 +1, False시 카인드스코어 -1
+    void kindScore(boolean tf, Long id);
+
+
     //회원 정보 조회
     UserDTO getUser(Long id);
 
