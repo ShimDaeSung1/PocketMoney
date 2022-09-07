@@ -10,7 +10,7 @@
 
 ## 💻 기술 스택 & 개발 환경
 ### 프레임워크/API
-- Backend  : Spring Boot, Spring Data JPA, Spring Security  
+- Backend  : Spring Boot, Spring Data JPA, Spring Security, Kakao Login API  
 - Frontend : React 
 ### 데이터베이스
 - MariaDB(실서버), H2DB(테스트용)

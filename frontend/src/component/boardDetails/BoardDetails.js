@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import styled from "styled-components";
@@ -8,11 +9,13 @@ import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 import deleteBoardApi from "../../api/board/DeleteBoardApi";
 import findCommentApi from "./../../api/comment/FindCommentApi";
 import CommentWrite from "./CommentWrite";
+import createRoomApi from "./../../api/chat/CreateRoomApi";
+import ImportantStart from "./ImportantStart";
+import MainHeader from "./MainHeader";
 
 const Outside = styled.div`
   width: 1050px;
-  margin: 10px auto;
-  border: 5px solid blue;
+  margin: 30px auto;
 `;
 const ContentHeader = styled.div`
   margin-top: 10px;
@@ -34,7 +37,7 @@ const ConnectButton = styled.div`
   margin-left: 30px;
   line-height: 50px;
   font-size: 20px;
-  background-color: lightGreen;
+  background-color: rgb(24, 191, 230);
   text-align: center;
   cursor: pointer;
 `;
@@ -45,7 +48,7 @@ const DeleteButton = styled.div`
   margin-left: 10px;
   line-height: 50px;
   font-size: 20px;
-  background-color: lightGreen;
+  background-color: rgb(24, 191, 230);
   text-align: center;
   cursor: pointer;
 `;
@@ -56,7 +59,7 @@ const EditButton = styled.div`
   margin-left: 30px;
   line-height: 50px;
   font-size: 20px;
-  background-color: lightGreen;
+  background-color: rgb(24, 191, 230);
   text-align: center;
   cursor: pointer;
 `;
@@ -64,21 +67,28 @@ const ContentImg = styled.div`
   margin: 0 auto;
   width: 1000px;
   height: 400px;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 
 const BoardDetails = () => {
   const navigate = useNavigate();
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
-  const match = () => {
-    alert("매칭테스트 성공");
-  };
+
   const params = useParams();
   const boardId = params.boardId;
   const [data, setDate] = useState();
+  const [wish, setWish] = useState(false);
 
   const [commentPage, setCommentPage] = useState(1);
   const [comments, setComments] = useState();
+
+  const match = () => {
+    createRoomApi(boardId, data.title, accesstoken).then((resp) => {
+      if (!resp) {
+        navigate("/chat");
+      }
+    });
+  };
 
   useEffect(() => {
     findBoardApi(accesstoken, boardId, navigate).then((dataPromise) => {
@@ -87,6 +97,7 @@ const BoardDetails = () => {
         navigate("/");
       }
       setDate(dataPromise);
+      //setWish(dataPromise.wish)
     });
   }, []);
 
@@ -104,12 +115,19 @@ const BoardDetails = () => {
 
   return (
     <>
+      <MainHeader />
       <Outside>
         <ContentHeader>
           <Title>{data ? data.title : ""}</Title>
           {data ? (
             data.isUser === "USER" ? (
               <>
+                <ImportantStart
+                  data={data}
+                  accesstoken={accesstoken}
+                  wish={wish}
+                  setWish={setWish}
+                />
                 <EditButton
                   onClick={() => {
                     navigate("/board/write/modify/" + boardId, {
@@ -132,7 +150,16 @@ const BoardDetails = () => {
             ""
           )}
         </ContentHeader>
-        <ContentImg>이미지</ContentImg>
+        <ContentImg>
+          <img
+            src="https://pocketdon.s3.ap-northeast-2.amazonaws.com/board/85e6dc2d-1666-43c4-94b0-1484cdd9ba2atestlogo.JPG"
+            alt="my image"
+            style={{
+              width: "1000px",
+              height: "400px",
+            }}
+          />
+        </ContentImg>
         <BoardBody data={data} />
         {data ? (
           data.isUser === "NOLOGIN" ? (

@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/img-redundant-alt */
 import React from "react";
 import styled from "styled-components";
 
@@ -8,39 +9,33 @@ const BoardBox = styled.div`
   display: inline-block;
   width: 300px;
   height: 410px;
-  border: 5px solid black;
   margin: 20px;
+  cursor: pointer;
 `;
 const ImgBox = styled.div`
   margin: 0 auto;
   margin-top: 15px;
   width: 250px;
   height: 200px;
-  border: 5px solid blue;
 `;
 const BoardTitle = styled.div`
   margin: 0 auto;
   margin-top: 3px;
   width: 250px;
   height: 30px;
-  text-align: center;
-  border: 5px solid blue;
 `;
 const Salary = styled.div`
   margin: 0 auto;
   margin-top: 3px;
   width: 250px;
   height: 30px;
-  text-align: center;
-  border: 5px solid blue;
+  font-weight: bold;
 `;
 const Location = styled.div`
   margin: 0 auto;
   margin-top: 3px;
   width: 250px;
   height: 30px;
-  text-align: center;
-  border: 5px solid blue;
 `;
 
 function Boards(props) {
@@ -56,7 +51,16 @@ function Boards(props) {
                     props.navigate("/board/" + board.boardId);
                   }}
                 >
-                  <ImgBox>이미지</ImgBox>
+                  <ImgBox>
+                    <img
+                      src="https://pocketdon.s3.ap-northeast-2.amazonaws.com/board/85e6dc2d-1666-43c4-94b0-1484cdd9ba2atestlogo.JPG"
+                      alt="my image"
+                      style={{
+                        width: "250px",
+                        height: "200px",
+                      }}
+                    />
+                  </ImgBox>
                   <BoardTitle>{board.title}</BoardTitle>
                   <Salary>{board.pay} 원</Salary>
                   <Location>{board.city}</Location>

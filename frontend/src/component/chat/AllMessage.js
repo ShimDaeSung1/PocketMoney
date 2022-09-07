@@ -1,11 +1,12 @@
 /* eslint-disable jsx-a11y/img-redundant-alt */
 import React, { useState } from "react";
 import styled from "styled-components";
+import findChttingRoomApi from "./../../api/chat/FindChttingRoomApi";
+import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 
 const Outside = styled.div`
-  display: inline-block;
   width: 350px;
-  height: 400px;
+  height: 500px;
   overflow: auto;
   border-right: 5px solid blue;
 `;
@@ -46,7 +47,8 @@ const LatestDate = styled.div`
   color: gray;
   font-size: 15px;
 `;
-function AllMessage() {
+function AllMessage(props) {
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [sword, setSword] = useState("");
   const search = () => {
     if (!sword.length) {
@@ -61,6 +63,16 @@ function AllMessage() {
       search();
     }
   };
+
+  function selectOneChatRoom(id) {
+    if (props.chatInf !== null) {
+      props.stomps.disconnect();
+    }
+    findChttingRoomApi(id, accesstoken).then((resp) => {
+      props.setChatInf(resp);
+      props.setMessages(resp.messageDetailDtoList);
+    });
+  }
   return (
     <Outside>
       <Search>
@@ -83,26 +95,17 @@ function AllMessage() {
           />
         </Serachsubmit>
       </Search>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
-      <Message>
-        <Title>제목</Title>
-        <User>상대방유저이름</User>
-        <LatestDate>날짜</LatestDate>
-      </Message>
+      {props.roomList
+        ? props.roomList.map((room) => {
+            return (
+              <Message onClick={() => selectOneChatRoom(room.id)}>
+                <Title>{room.name}</Title>
+                <User>{room.nickName}</User>
+                <LatestDate>{room.regDate}</LatestDate>
+              </Message>
+            );
+          })
+        : ""}
     </Outside>
   );
 }

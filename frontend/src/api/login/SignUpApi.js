@@ -30,12 +30,8 @@ function signUpApi(
       }
     })
     .catch((error) => {
-      if (error.response.status === 401 || error.response.status === 400) {
-        alert(error.response.data.errorMessage);
-        return Promise.reject();
-      }
-      alert("뭔지 모르지만 회원가입실패?! 홈으로..");
-      navigate("/");
+      alert(error.response.data.message);
+      return Promise.reject();
     });
 }
 

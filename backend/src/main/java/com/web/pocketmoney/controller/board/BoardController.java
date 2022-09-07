@@ -12,6 +12,9 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.IOException;
 
 @RestController
 @RequestMapping("boards")
@@ -21,21 +24,22 @@ public class BoardController {
     private final BoardService boardService;
 
     @PostMapping("")
-    public ResponseEntity<BoardResponseDto> saveBoard(@RequestBody BoardRequestDto boardRequestDto,
-                                                      @AuthenticationPrincipal User user)
-    {
+    public ResponseEntity<BoardResponseDto> saveBoard(@RequestPart(value = "board") BoardRequestDto boardRequestDto,
+                                                      @AuthenticationPrincipal User user, @RequestPart(value="file", required = false) MultipartFile file) throws IOException {
         log.info("Board save Controller : " + user.toString());
-        log.info(boardRequestDto.toString());
 
-        return ResponseEntity.ok(boardService.save(user, boardRequestDto));
+        log.info(boardRequestDto.toString());
+        log.info("file : " + file);
+
+        return ResponseEntity.ok(boardService.save(user, boardRequestDto, file));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<BoardResponseDto> updateBoard(@PathVariable("id") Long id,
-                                                        @RequestBody BoardRequestDto boardRequestDto,
-                                                        @AuthenticationPrincipal User user)
-    {
-        return ResponseEntity.ok(boardService.update(user, boardRequestDto, id));
+                                                        @RequestPart(value = "board") BoardRequestDto boardRequestDto,
+                                                        @RequestPart(value = "file", required = false) MultipartFile file,
+                                                        @AuthenticationPrincipal User user) throws IOException {
+        return ResponseEntity.ok(boardService.update(user, boardRequestDto, id, file));
     }
 
     @DeleteMapping("/{id}")
@@ -53,14 +57,22 @@ public class BoardController {
     }
 
     @GetMapping("/list/{num}")
-    public ResponseEntity<BoardResponseListDto> boardList(@PathVariable("num") int num)
+    public ResponseEntity<BoardResponseListDto> boardList(@AuthenticationPrincipal User user, @PathVariable("num") int num)
     {
-        return ResponseEntity.ok(boardService.boardList(num));
+        return ResponseEntity.ok(boardService.boardList(user, num));
     }
 
-    @GetMapping("/list/{search}/{num}")
-    public ResponseEntity<BoardResponseListDto> boardSearch(@PathVariable("search") String str, @PathVariable("num") int num)
+    @GetMapping("/listTitle/{num}")
+    public ResponseEntity<BoardResponseListDto> boardSearch(@AuthenticationPrincipal User user, @RequestParam("search") String str, @PathVariable("num") int num)
     {
-        return ResponseEntity.ok(boardService.boardSearchList(str, num));
+        log.info("search boards by title : " + str + " " + num);
+        return ResponseEntity.ok(boardService.boardSearchList(user,str, num));
+    }
+
+    @GetMapping("/listCity/{num}")
+    public ResponseEntity<BoardResponseListDto> boardSearchByArea(@AuthenticationPrincipal User user, @RequestParam("search") String str, @PathVariable("num") int num)
+    {
+        log.info("search board by of city : " + str);
+        return ResponseEntity.ok(boardService.boardSearchListByCity(user, str, num));
     }
 }

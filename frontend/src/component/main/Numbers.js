@@ -70,15 +70,31 @@ function Numbers(props) {
           ""
         )}
         {range(props.start, props.end + 1).map((index) => {
-          return (
-            <NumberButton
-              onClick={() => {
-                props.setNum(index);
-              }}
-            >
-              {index}
-            </NumberButton>
-          );
+          if (props.num === index) {
+            return (
+              <NumberButton
+                style={{
+                  backgroundColor: "rgb(200, 200, 200)",
+                  fontWeight: "bold",
+                }}
+                onClick={() => {
+                  props.setNum(index);
+                }}
+              >
+                {index}
+              </NumberButton>
+            );
+          } else {
+            return (
+              <NumberButton
+                onClick={() => {
+                  props.setNum(index);
+                }}
+              >
+                {index}
+              </NumberButton>
+            );
+          }
         })}
         {props.next ? (
           <NextButton

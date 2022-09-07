@@ -20,5 +20,7 @@ public class BoardDto {
     private int view;
     private String nickName;
     private UserState isUser;
+    private String filePath;
+    private Boolean wish;
     //private int isUser; //
 }

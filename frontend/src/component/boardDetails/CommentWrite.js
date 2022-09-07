@@ -31,8 +31,9 @@ const CommentWritingButton = styled.button`
   width: 60px;
   margin-left: 5px;
   padding: 7px;
-  background: #333333;
-  color: #cccccc;
+  background: rgb(24, 191, 230);
+  border: none;
+  font-size: 20px;
   font-family: "Gowun Dodum", sans-serif;
   border-radius: 5px;
 `;

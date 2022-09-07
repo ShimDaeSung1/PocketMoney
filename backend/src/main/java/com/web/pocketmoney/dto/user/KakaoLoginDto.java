@@ -9,4 +9,5 @@ public class KakaoLoginDto {
     private String email;
     private String name;
     private Boolean isNew;
+    private String city;
 }

@@ -10,8 +10,21 @@ const SignUpPage = (props) => {
   const [checkPassword, setCheckPassword] = useState("");
   const [nickName, setNickName] = useState("");
   const [age, setAge] = useState("");
+
   const [sex, setSex] = useState("");
   const [userName, setUserName] = useState("");
+
+  const checkOnlyOne = (checkThis) => {
+    const checkboxes = document.getElementsByName("sex");
+    for (let i = 0; i < checkboxes.length; i++) {
+      if (checkboxes[i] !== checkThis) {
+        checkboxes[i].checked = false;
+      } else {
+        setSex(checkThis.value);
+      }
+    }
+  };
+
   return (
     <>
       <HomeButton
@@ -53,11 +66,6 @@ const SignUpPage = (props) => {
           placeholder={"나이"}
         />
         <StyledInput
-          value={sex}
-          onChange={(e) => setSex(e.target.value)}
-          placeholder={"성별"}
-        />
-        <StyledInput
           type="text"
           id="pInput"
           readOnly={true}
@@ -71,6 +79,50 @@ const SignUpPage = (props) => {
             );
           }}
         />
+        <div
+          style={{
+            display: "inline-block",
+            width: "60px",
+            fontSize: "20px",
+            marginLeft: "-40px",
+          }}
+        >
+          성별:
+        </div>
+        <input
+          type="checkbox"
+          name="sex"
+          value={"남성"}
+          onChange={(e) => checkOnlyOne(e.target)}
+          style={{ display: "inline-block", width: "100px", height: "20px" }}
+        />{" "}
+        <div
+          style={{
+            display: "inline-block",
+            width: "40px",
+            fontSize: "20px",
+            marginLeft: "-40px",
+          }}
+        >
+          남
+        </div>
+        <input
+          type="checkbox"
+          name="sex"
+          value={"여성"}
+          onChange={(e) => checkOnlyOne(e.target)}
+          style={{ display: "inline-block", width: "100px", height: "20px" }}
+        />{" "}
+        <div
+          style={{
+            display: "inline-block",
+            width: "40px",
+            fontSize: "20px",
+            marginLeft: "-40px",
+          }}
+        >
+          여
+        </div>
         <LoginButton
           onClick={() => {
             const isValidEmail = email.includes("@") && email.includes(".");

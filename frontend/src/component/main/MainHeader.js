@@ -10,7 +10,7 @@ const Header = styled.div`
   height: 50px;
   position: sticky;
   top: 0;
-  background-color: aquamarine;
+  background-color: white;
   z-index: 2;
 `;
 const HeaderInside = styled.div`
@@ -24,11 +24,12 @@ const HeaderInside = styled.div`
 `;
 const Logo = styled.div`
   margin-right: auto;
-  border: 5px solid blue;
+  color: rgb(24, 191, 230);
   height: 40px;
   width: 300px;
   text-align: center;
   font-size: 30px;
+  font-weight: bold;
   cursor: pointer;
 `;
 const RightHeader = styled.div`
@@ -42,8 +43,7 @@ const RightHeader = styled.div`
 const Search = styled.div`
   display: inline-block;
   width: 250px;
-  background: #f7f7f7;
-  border-radius: 18px;
+  background: rgb(200, 200, 200);
 `;
 const Searchinput = styled.input`
   width: 200px;
@@ -60,28 +60,28 @@ const Login = styled.div`
   margin-left: 5px;
   width: 100px;
   cursor: pointer;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 const SignUp = styled.div`
   display: inline-block;
   margin-left: 20px;
   width: 100px;
   cursor: pointer;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 const Mypage = styled.div`
   display: inline-block;
   margin-left: 20px;
   width: 100px;
   cursor: pointer;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 const Logout = styled.div`
   display: inline-block;
   margin-left: 5px;
   width: 100px;
   cursor: pointer;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
 `;
 
 function MainHeader(props) {
@@ -92,10 +92,12 @@ function MainHeader(props) {
     if (!props.sword.length) {
       alert("검색어를 입력해주세요");
     } else {
-      searchBoardApi(props.sword, props.num).then((dataPromise) => {
+      searchBoardApi(props.sword, 1).then((dataPromise) => {
         props.setBoards(dataPromise);
       });
       props.setSearch(true);
+      props.setNotDefault(true);
+      props.setNum(1);
     }
   };
   const enterKey = () => {

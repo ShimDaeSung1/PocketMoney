@@ -13,7 +13,8 @@ function writeBoardApi(
   minute,
   pay,
   accessToken,
-  navigate
+  navigate,
+  bodyFormData
 ) {
   const config = {
     headers: {
@@ -28,8 +29,15 @@ function writeBoardApi(
     date: [year, month, day, hour, minute],
     pay: pay,
   };
+
+  bodyFormData.append(
+    "board",
+    new Blob([JSON.stringify(body)], {
+      type: "application/json",
+    })
+  );
   return axios
-    .post(BACKEND_ADDRESS + "/boards/", body, config)
+    .post(BACKEND_ADDRESS + "/boards/", bodyFormData, config)
     .then((response) => {
       if (response.status === 200) {
         alert("작성이 완료되었습니다");
@@ -37,14 +45,7 @@ function writeBoardApi(
       }
     })
     .catch((error) => {
-      if (error.response.status === 401 || error.response.status === 403) {
-        alert("로그인이 만료되었습니다. 다시 로그인해주세요.");
-        navigate("/login");
-        return Promise.reject();
-      } else {
-        alert("이유가 뭔지 모르겠지만 작성 실패했음.");
-        navigate("/");
-      }
+      alert(error.response.data.message);
     });
 }
 

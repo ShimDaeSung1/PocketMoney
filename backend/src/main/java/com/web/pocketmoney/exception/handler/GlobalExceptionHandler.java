@@ -80,4 +80,11 @@ public class GlobalExceptionHandler {
                 .body(response);
 
     }
+
+    @ExceptionHandler({CNotNumberException.class, CNotRangeException.class})
+    public ResponseEntity<ErrorResponse> handleInputFailedException(Exception e) {
+        ErrorResponse response = new ErrorResponse(ErrorCode.CHATROOM_DUPLICATION, e.getMessage());
+        return ResponseEntity.status(HttpStatus.valueOf(response.getStatus())).body(response);
+    }
+
 }

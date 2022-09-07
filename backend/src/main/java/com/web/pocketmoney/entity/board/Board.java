@@ -49,6 +49,12 @@ public class Board {
 //    @OneToMany(mappedBy = "boardId", cascade = CascadeType.REMOVE)
 //    private List<Comment> comments = new ArrayList<>();
 
+    @Column(nullable = true)
+    private String fileKey;
+
+    @Column(nullable = true)
+    private String filePath;
+
     @Column(nullable = false) // 희망 시급
     private int pay;
 

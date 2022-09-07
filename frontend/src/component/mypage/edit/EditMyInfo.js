@@ -1,8 +1,9 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router";
 import { ACCESS_TOKEN } from "./../../../constant/LocalStorage";
 import styled from "styled-components";
 import CancelButton from "../../CancelButton";
+import edidUserApi from "./../../../api/user/edidUserApi";
 
 const EditButton = styled.a`
   display: block;
@@ -43,11 +44,15 @@ const EditBox = styled.div`
 `;
 
 function EditMyInfo() {
-  const [nickName, setNickName] = useState("");
-  const [age, setAge] = useState("");
-  const [sex, setSex] = useState("");
-  const [userName, setUserName] = useState("");
-  if (!sessionStorage.getItem(ACCESS_TOKEN)) {
+  const { state } = useLocation();
+  const [nickName, setNickName] = useState(state ? state.nickName : "");
+  const [age, setAge] = useState(state ? state.age : "");
+  const [sex, setSex] = useState(state ? state.sex : "");
+  const [password, setPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [passwordComp, setPasswordComp] = useState("");
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
+  if (!accesstoken) {
     alert("로그인이 필요한 서비스입니다!!!");
     window.location.href = "/login";
   }
@@ -61,9 +66,22 @@ function EditMyInfo() {
         placeholder={"닉네임"}
       />
       <StyledInput
-        value={userName}
-        onChange={(e) => setUserName(e.target.value)}
-        placeholder={"이름"}
+        type="password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        placeholder={"현재 비밀번호"}
+      />
+      <StyledInput
+        type="password"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+        placeholder={"새 비밀번호"}
+      />
+      <StyledInput
+        type="password"
+        value={passwordComp}
+        onChange={(e) => setPasswordComp(e.target.value)}
+        placeholder={"새 비밀번호 확인"}
       />
       <StyledInput
         value={age}
@@ -96,9 +114,24 @@ function EditMyInfo() {
             age.length &&
             sex.length &&
             document.getElementById("pInput").value &&
-            userName.length
+            password.length &&
+            newPassword.length &&
+            passwordComp.length
           ) {
-            //마이페이지 수정 api
+            if (newPassword === passwordComp) {
+              edidUserApi(
+                nickName,
+                age,
+                sex,
+                document.getElementById("pInput").value,
+                password,
+                newPassword,
+                navigate,
+                accesstoken
+              );
+            } else {
+              alert("새 비밀번호 확인이 일치하지 않습니다.");
+            }
           } else {
             alert("빈칸을 다 채워주세요");
           }

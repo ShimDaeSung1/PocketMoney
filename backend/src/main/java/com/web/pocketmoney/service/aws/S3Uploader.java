@@ -5,6 +5,10 @@ import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.web.pocketmoney.dto.aws.S3DeleteResponseDto;
 import com.web.pocketmoney.dto.aws.S3UploadResponseDto;
+import com.web.pocketmoney.entity.board.Board;
+import com.web.pocketmoney.entity.board.BoardRepository;
+import com.web.pocketmoney.entity.user.User;
+import com.web.pocketmoney.exception.CBoardIdFailedException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,20 +27,22 @@ import java.util.UUID;
 @Log4j2
 public class S3Uploader {
     private final AmazonS3Client amazonS3Client;
+    private final BoardRepository boardRepository;
     @Value("${cloud.aws.s3.bucket}")
     private String bucket;
 
-    public S3UploadResponseDto uploadFiles(MultipartFile multipartFile, String dirName) throws IOException {
+    public S3UploadResponseDto uploadFiles(MultipartFile multipartFile, String dirName, User user) throws IOException {
         log.info("multipart : " + multipartFile);
+       // Board board = boardRepository.findById(id).orElseThrow(CBoardIdFailedException::new);
         /*File uploadFile = new File(multipartFile.getOriginalFilename());
         multipartFile.transferTo(uploadFile);*/
         File uploadFile = convert(multipartFile)  // 파일 변환할 수 없으면 에러
                 .orElseThrow(() -> new IllegalArgumentException("error: MultipartFile -> File convert fail"));
         log.info(uploadFile + " : " + multipartFile);
-        return upload(uploadFile, dirName);
+        return upload(uploadFile, dirName, user);
     }
 
-    public S3UploadResponseDto upload(File uploadFile, String filePath) {
+    public S3UploadResponseDto upload(File uploadFile, String filePath, User user) {
         String fileName = filePath + "/" + UUID.randomUUID() + uploadFile.getName();   // S3에 저장된 파일 이름
         log.info("fileName : " + fileName);
         String uploadImageUrl = putS3(uploadFile, fileName); // s3로 업로드

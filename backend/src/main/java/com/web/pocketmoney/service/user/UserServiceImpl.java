@@ -125,6 +125,7 @@ public class UserServiceImpl implements UserService{
         log.info("password : {}" , password);
 
         User user = userRepository.findByEmail(email).orElseThrow(CEmailSigninFailedException::new);
+        String city = user.getCity();
         log.info(user.toString());
         if (!encoder.matches(password, user.getPassword())) {
             log.info("비밀번호 다름");
@@ -140,6 +141,7 @@ public class UserServiceImpl implements UserService{
                         .token(jwtTokenProvider.createToken(String.valueOf(user.getEmail()), user.getRoles()))
                         .userId(user.getId())
                         .nickName(user.getNickName())
+                        .city(city)
                         .build()
         );
     }
@@ -159,12 +161,21 @@ public class UserServiceImpl implements UserService{
         if(user2 != null) {
             throw new CNickNameSignupFailedException();
         }
+
+        try {
+            Double.parseDouble(signupUserDTO.getAge());
+            Integer.parseInt(signupUserDTO.getAge());
+        } catch(NumberFormatException e) {
+            throw new CNotNumberException("나이는 숫자 및 정수형만 입력 가능합니다.");
+            //log.info(e.getMessage());
+        }
+
         userRepository.save(User.builder()
                 .userName(signupUserDTO.getUserName())
                 .nickName(signupUserDTO.getNickName())
                 .password(encoder.encode(signupUserDTO.getPassword()))
                 .email(signupUserDTO.getEmail())
-                .age(signupUserDTO.getAge())
+                .age(Integer.parseInt(signupUserDTO.getAge()))
                 .city(signupUserDTO.getCity())
                 .sex(signupUserDTO.getSex())
                 .roles(Collections.singletonList("ROLE_USER"))
