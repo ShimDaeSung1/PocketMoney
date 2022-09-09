@@ -23,7 +23,7 @@ public interface ChatRoomService {
    //채팅방 생성
    void createRoom(ChatRoomRequestDto chatRoomRequestDto, Long userId);
 
-   void deleteById(Long chatRoomId);
+   void deleteById(Long chatRoomId, Long userId);
 
    List<ChatRoomListDto> searchRoom(Long userId, String roomName);
 

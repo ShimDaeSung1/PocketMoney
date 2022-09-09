@@ -52,9 +52,10 @@ public class ChatRoomController {
 
     //채팅방 삭제
     @DeleteMapping("/{chatRoomId}") //@RequestMapping("/room")
-    public ResponseEntity delete(@PathVariable("chatRoomId") Long id){
+    public ResponseEntity delete(@PathVariable("chatRoomId") Long id, @AuthenticationPrincipal User user){
+
         log.info("ChatRoom : "+ id);
-        chatRoomService.deleteById(id);
+        chatRoomService.deleteById(id, user.getId());
         return ResponseEntity.noContent().build();
     }
 
