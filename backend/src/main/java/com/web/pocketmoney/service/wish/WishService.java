@@ -12,19 +12,18 @@ import java.util.List;
 
 public interface WishService {
 
-    Long register(InsertWishDTO insertwishDTO);
+    Long register(InsertWishDTO insertwishDTO, User user);
 
     void remove(Long id, Long userId);
 
     WishPageResultDTO<WishDTO, Object[]> findAll(WishPageRequestDTO wishPageRequestDTO, Long id);
 
-    default Wish dtoToEntity(InsertWishDTO dto){
+    default Wish dtoToEntity(InsertWishDTO dto, User user1){
 
-        User user = User.builder().id(dto.getUserId()).build();
+        User user = User.builder().id(user1.getId()).build();
         Board board = Board.builder().id(dto.getBoardId()).build();
 
         Wish wish = Wish.builder()
-                .id(dto.getId())
                 .userId(user)
                 .boardId(board)
                 .build();
@@ -40,12 +39,12 @@ public interface WishService {
                 .build();
 
         WishDTO wishDTO = WishDTO.builder()
-                .id(wish.getId())
-                .userId(user.getId())
+//                .id(wish.getId())
+//                .userId(user.getId())
                 .boardId(board.getId())
-                .nickName(user2.getNickName())
+//                .nickName(user2.getNickName())
                 .title(board.getTitle())
-                .content(board.getContent())
+//                .content(board.getContent())
                 .build();
 
         return wishDTO;
