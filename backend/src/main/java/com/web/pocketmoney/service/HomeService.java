@@ -30,7 +30,7 @@ public class HomeService {
 
         List<BoardHomeDto> homeDto = new ArrayList<>();
         for(int i=page.getStart(); i <= page.getEnd(); i++) {
-            homeDto.add(new BoardHomeDto(boards.get(i).getTitle(), boards.get(i).getPay(), boards.get(i).getUser().getCity(), boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getId(), boards.get(i).getWantedTime()));
+            homeDto.add(new BoardHomeDto(boards.get(i).getTitle(), boards.get(i).getPay(), boards.get(i).getUser().getCity(), boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getId(), boards.get(i).getWantedTime(), boards.get(i).getFilePath()));
         }
 
         return new BoardHomeResponserDto(homeDto);
