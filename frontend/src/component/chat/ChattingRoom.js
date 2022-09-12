@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
 import styled from "styled-components";
 import AllMessage from "./AllMessage";
-import DefaultRoom from "./DefaultRoom";
 import $ from "jquery";
 import SockJS from "sockjs-client";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
 import { Stomp } from "stompjs/lib/stomp.js";
 import { useNavigate } from "react-router";
+import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
+import deleteChatRoomApi from "./../../api/chat/DeleteChatRoomApi";
 
 const Outside = styled.div`
   display: flex;
@@ -15,6 +16,13 @@ const Outside = styled.div`
 `;
 const ChatBox = styled.div`
   width: 680px;
+`;
+const ExitButton = styled.div`
+  width: 130px;
+  height: 25px;
+  font-size: 20px;
+  color: gray;
+  cursor: pointer;
 `;
 const ChatRoom = styled.div`
   display: flex;
@@ -80,6 +88,7 @@ const CommentWritingButton = styled.button`
 `;
 
 function ChattingRoom(props) {
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const writingRef = useRef();
 
   const handleResizeHeight = useCallback(() => {
@@ -96,8 +105,13 @@ function ChattingRoom(props) {
 
   const msgRef = useRef();
   const sendRef = useRef();
-  const navigate = useNavigate();
   const [stomps, setStomps] = useState();
+
+  const exitChatRoom = (roomId) => {
+    if (window.confirm("정말 나가겠습니까?")) {
+      deleteChatRoomApi(roomId, accesstoken);
+    }
+  };
 
   useEffect(() => {
     //1. SockJS를 내부에 들고있는 stomp를 내어줌
@@ -197,8 +211,14 @@ function ChattingRoom(props) {
         setUsername={props.setUsername}
         stomps={stomps}
       />
-      {/* <DefaultRoom /> */}
       <ChatBox>
+        {props.chatInf ? (
+          <ExitButton onClick={() => exitChatRoom(props.chatInf.id)}>
+            채팅방 나가기
+          </ExitButton>
+        ) : (
+          ""
+        )}
         <ChatRoom id="chatRoom">
           {props.chatInf
             ? props.messages.map((inf) => {
@@ -234,33 +254,37 @@ function ChattingRoom(props) {
         <React.Fragment>
           <div ref={msgRef}></div>
         </React.Fragment>
-        <Write>
-          <StyledTextarea
-            ref={writingRef}
-            id="msg"
-            onChange={(e) => {
-              handleResizeHeight();
-            }}
-          />
-          <CommentWritingButton
-            ref={sendRef}
-            onClick={() => {
-              let msg = document.getElementById("msg");
-              stomps.send(
-                "/pub/chat/message",
-                {},
-                JSON.stringify({
-                  roomId: props.roomId,
-                  message: msg.value,
-                  writer: props.username,
-                })
-              );
-              msg.value = "";
-            }}
-          >
-            등록
-          </CommentWritingButton>
-        </Write>
+        {props.chatInf ? (
+          <Write>
+            <StyledTextarea
+              ref={writingRef}
+              id="msg"
+              onChange={(e) => {
+                handleResizeHeight();
+              }}
+            />
+            <CommentWritingButton
+              ref={sendRef}
+              onClick={() => {
+                let msg = document.getElementById("msg");
+                stomps.send(
+                  "/pub/chat/message",
+                  {},
+                  JSON.stringify({
+                    roomId: props.roomId,
+                    message: msg.value,
+                    writer: props.username,
+                  })
+                );
+                msg.value = "";
+              }}
+            >
+              등록
+            </CommentWritingButton>
+          </Write>
+        ) : (
+          ""
+        )}
       </ChatBox>
     </Outside>
   );
