@@ -69,7 +69,7 @@ function BoardBody(props) {
     <ContentBox>
       <SubInf>
         <Writer>작성자: {props.data ? props.data.nickName : ""}</Writer>
-        <KindScore>100도 이미지</KindScore>
+        <KindScore>좋아요: {props.data ? props.data.kindeScore : ""}</KindScore>
         <Salary>시급: {props.data ? props.data.pay : ""} 원</Salary>
         <Area>지역: {props.data ? props.data.area : ""}</Area>
         <View>조회수: {props.data ? props.data.view : ""}</View>

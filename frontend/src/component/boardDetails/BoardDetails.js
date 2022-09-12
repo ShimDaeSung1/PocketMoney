@@ -101,7 +101,6 @@ const BoardDetails = () => {
       }
       setData(dataPromise);
       setWish(dataPromise.wish);
-      //setWish(dataPromise.wish)
     });
   }, []);
 
