@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 const OutLine = styled.div`
-  border-top: 1px solid blue;
+  border-top: 1px solid rgb(200, 200, 200);
 `;
 const NewContentTextarea = styled.textarea`
   font-family: "Gowun Dodum", sans-serif;
@@ -11,7 +11,7 @@ const NewContentTextarea = styled.textarea`
   resize: none;
   padding: 10px;
   height: 300px;
-  border: 1px solid gray;
+  border: 1px solid rgb(200, 200, 200);
   &:focus {
     outline: 2px solid rgb(90, 155, 213);
     border: 1px solid rgb(90, 155, 213);

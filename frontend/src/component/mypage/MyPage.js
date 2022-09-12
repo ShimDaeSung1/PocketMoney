@@ -8,12 +8,13 @@ import InfBox from "./InfBox";
 import SubFuncBox from "./SubFuncBox";
 import findUserDetailsApi from "./../../api/user/findUserDetailsApi";
 import WishBoards from "./wishboards/WishBoards";
+import findMyWishBoardApi from "./../../api/board/FindMyWishBoardsApi";
 
 const Outside = styled.div`
   width: 1050px;
   height: 400px;
   margin: 10px auto;
-  border: 5px solid blue;
+  border: 1px solid rgb(200, 200, 200);
   overflow: auto;
 `;
 const MyInf = styled.div`
@@ -32,24 +33,18 @@ function Mypage() {
     window.location.href = "/login";
   }
   const navigate = useNavigate();
+  const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [userInf, setUserInf] = useState();
   const [isBoardsOpened, setIsBoardsOpened] = useState(false);
-  const [wishBoards, setWishBoards] = useState([
-    { id: 1, name: "ㅎㅇㅎㅇ" },
-    { id: 2, name: "ㅎㅇㅎㅇ" },
-    { id: 3, name: "ㅎㅇㅎㅇ" },
-    { id: 4, name: "ㅎㅇㅎㅇ" },
-    { id: 5, name: "ㅎㅇㅎㅇ" },
-    { id: 6, name: "ㅎㅇㅎㅇ" },
-    { id: 7, name: "ㅎㅇㅎㅇ" },
-    { id: 8, name: "ㅎㅇㅎㅇ" },
-  ]);
+  const [wishBoards, setWishBoards] = useState([]);
   useEffect(() => {
     findUserDetailsApi(sessionStorage.getItem(ACCESS_TOKEN)).then((resp) => {
       setUserInf(resp);
     });
+    findMyWishBoardApi(accesstoken).then((resp) => {
+      setWishBoards(resp.dtoList);
+    });
   }, []);
-
   return (
     <>
       <Outside>

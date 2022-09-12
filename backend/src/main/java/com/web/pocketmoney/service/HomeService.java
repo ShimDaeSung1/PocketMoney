@@ -24,15 +24,13 @@ public class HomeService {
     public BoardHomeResponserDto homeBoardList()
     {
         List<Board> boards = boardRepository.findAll(Sort.by(Sort.Direction.DESC, "createTime"));
-
         int total = boards.size();
         CriteriaVo page = new CriteriaVo(1,9, total);
 
         List<BoardHomeDto> homeDto = new ArrayList<>();
         for(int i=page.getStart(); i <= page.getEnd(); i++) {
-            homeDto.add(new BoardHomeDto(boards.get(i).getTitle(), boards.get(i).getPay(), boards.get(i).getUser().getCity(), boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getId(), boards.get(i).getWantedTime(), boards.get(i).getFilePath()));
+            homeDto.add(new BoardHomeDto(boards.get(i).getTitle(), boards.get(i).getPay(), boards.get(i).getArea(), boards.get(i).getView(), boards.get(i).getCreateTime(), boards.get(i).getId(), boards.get(i).getWantedTime(), boards.get(i).getFilePath()));
         }
-
         return new BoardHomeResponserDto(homeDto);
     }
 }

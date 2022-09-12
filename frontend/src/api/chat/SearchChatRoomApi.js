@@ -1,7 +1,7 @@
-import { BACKEND_ADDRESS } from "../../constant/ADDRESS";
 import axios from "axios";
+import { BACKEND_ADDRESS } from "../../constant/ADDRESS";
 
-function writeBoardImgApi(formData, accesstoken) {
+function searchchatRoomApi(search, accesstoken) {
   const config = {
     headers: {
       "X-AUTH-TOKEN": accesstoken,
@@ -9,7 +9,7 @@ function writeBoardImgApi(formData, accesstoken) {
   };
 
   return axios
-    .post(BACKEND_ADDRESS + "/image", formData, config)
+    .get(BACKEND_ADDRESS + "/room/list/search?title=" + search, config)
     .then((response) => {
       if (response.status === 200) {
         return response.data;
@@ -21,4 +21,4 @@ function writeBoardImgApi(formData, accesstoken) {
     });
 }
 
-export default writeBoardImgApi;
+export default searchchatRoomApi;

@@ -11,8 +11,6 @@ const Information = styled.div`
   height: 35px;
   margin: 10px;
   font-size: 28px;
-  border: 2px solid blue;
-  border-radius: 100px;
 `;
 function InfBox(props) {
   return (

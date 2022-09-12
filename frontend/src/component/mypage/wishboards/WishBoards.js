@@ -5,9 +5,11 @@ import WishListOpenButton from "./WishListOpenButton";
 
 const StyledElement = styled.div`
   margin: 10px 0;
-  font-size: 19px;
+  font-size: 30px;
   padding: 4px 10px;
   cursor: pointer;
+  width: 230px;
+  color: rgb(24, 191, 230);
 `;
 function WishBoards(props) {
   return (
