@@ -36,11 +36,11 @@ public class WishServiceImpl implements WishService{
 
 
     @Override
-    public Long register(InsertWishDTO insertwishDTO) {
+    public Long register(InsertWishDTO insertwishDTO, User user) {
         Board board = boardRepository.findById(insertwishDTO.getBoardId()).orElseThrow(()->
                 new CBoardNotFoundException("해당 게시물을 찾을 수 없습니다.", ErrorCode.FORBIDDEN));
 
-        Wish wish = dtoToEntity(insertwishDTO);
+        Wish wish = dtoToEntity(insertwishDTO, user);
         log.info("wishDTO : " + insertwishDTO);
         log.info("wish : "+ wish.getUserId().getId(), wish.getBoardId().getId());
         wishRepository.save(wish);

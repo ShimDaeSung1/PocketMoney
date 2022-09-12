@@ -46,9 +46,8 @@ public class WishController {
     @PostMapping("") //RequestMapping("/wish")
     public ResponseEntity<Void> register(@RequestBody InsertWishDTO insertWishDTO, @AuthenticationPrincipal User user){
 
-        insertWishDTO.setUserId(user.getId());
         log.info(insertWishDTO);
-        wishService.register(insertWishDTO);
+        wishService.register(insertWishDTO, user);
 
 //        return ResponseEntity.ok()
 //                .body(DefaultRes.res(StatusCode.NO_CONTENT, "관심 구인글 등록 완료!"));

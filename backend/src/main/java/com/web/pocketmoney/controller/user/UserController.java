@@ -1,8 +1,12 @@
 package com.web.pocketmoney.controller.user;
 
+import com.web.pocketmoney.dto.user.KindScoreDTO;
 import com.web.pocketmoney.dto.user.UserDTO;
 import com.web.pocketmoney.dto.user.UserModifyDTO;
+import com.web.pocketmoney.entity.room.ChatRoom;
+import com.web.pocketmoney.entity.room.ChatRoomRepository;
 import com.web.pocketmoney.entity.user.User;
+import com.web.pocketmoney.exception.CEmailSignupFailedException;
 import com.web.pocketmoney.exception.CUserNotFoundException;
 import com.web.pocketmoney.exception.ChatRoomNotFoundException;
 import com.web.pocketmoney.exception.handler.ErrorCode;
@@ -29,6 +33,8 @@ public class UserController {
     private final UserService userService;
 
     private final AuthenticationManager authenticationManager;
+
+    private final ChatRoomRepository chatRoomRepository;
 
     //회원 정보 조회
     @GetMapping("") //RequestMapping("/user")
@@ -62,8 +68,8 @@ public class UserController {
         //세션 등록
         //어썬티케이션 매니저에게 유저네임과 패스워드를 던져서
         //매니저가 자동으로 세션등록 해준다.
-        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(user.getEmail(),user.getPassword()));
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
         log.info("gostarrrttt");
 
 //       return ResponseEntity.ok()
@@ -81,6 +87,32 @@ public class UserController {
 
 //        return ResponseEntity.ok()
 //                .body(DefaultRes.res(StatusCode.NO_CONTENT, "회원정보 삭제 완료!"));
+        return ResponseEntity.noContent().build();
+    }
+
+    //카인드 스코어 수정
+    @PutMapping("/kindscore")
+    public ResponseEntity<Void> kindScore(@RequestBody KindScoreDTO kindScoreDTO, @AuthenticationPrincipal User user){
+
+        log.info("kindSCoreDTO"+kindScoreDTO);
+
+        Long userId = user.getId();
+
+        ChatRoom chatRoom = chatRoomRepository.findById(kindScoreDTO.getChatId())
+                .orElseThrow(()->
+                        new ChatRoomNotFoundException(
+                                "찾는 채팅방이 없습니다.", ErrorCode.FORBIDDEN)
+                        );
+        Long id1 = chatRoom.getEmployeeId().getId();
+        Long id2 = chatRoom.getEmployerId().getId();
+        if((userId == id1 && kindScoreDTO.getUserId() == id2) || (userId == id2 && kindScoreDTO.getUserId() == id1)){
+            userService.kindScore(kindScoreDTO.isTf(), kindScoreDTO.getUserId());
+        }else{
+            throw new CUserNotFoundException("권한이 없습니다.", ErrorCode.FORBIDDEN);
+        }
+
+
+
         return ResponseEntity.noContent().build();
     }
 }

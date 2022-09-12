@@ -12,15 +12,15 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class WishDTO {
 
-    private Long id;
+//    private Long id;
 
-    private Long userId;
+//    private Long userId;
 
     private Long boardId;
     
     // 조인해서 가져올 게시판의 제목과 내용
     private String title;
-    private String content;
-    private String nickName;
+//    private String content;
+//    private String nickName;
     
 }

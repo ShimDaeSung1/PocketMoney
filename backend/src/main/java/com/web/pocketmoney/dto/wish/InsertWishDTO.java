@@ -11,9 +11,5 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InsertWishDTO {
 
-    private Long id;
-
-    private Long userId;
-
     private Long boardId;
 }

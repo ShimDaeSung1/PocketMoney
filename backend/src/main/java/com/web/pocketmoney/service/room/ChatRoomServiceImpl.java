@@ -115,13 +115,20 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     }
 
     @Override
-    public void deleteById(Long chatRoomId) {
+    public void deleteById(Long chatRoomId, Long userId) {
 
         ChatRoom chatRoom = crr.findById(chatRoomId).orElseThrow(()->
                 new ChatRoomNotFoundException("해당 채팅방을 찾을 수 없습니다.", ErrorCode.NOT_FOUND));
 
-        log.info("chatROomId : " +chatRoomId);
-        crr.deleteById(chatRoom.getId());
+        if(chatRoom.getEmployeeId().getId() == userId){
+            crr.deleteEmployee(chatRoomId);
+        }else{
+            crr.deleteEmployer(chatRoomId);
+        }
+        if(chatRoom.getEmployeeId().getId() == null && chatRoom.getEmployerId().getId() == null){
+            crr.deleteById(chatRoomId);
+        }
+
     }
 
 

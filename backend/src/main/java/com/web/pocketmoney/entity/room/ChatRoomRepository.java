@@ -3,8 +3,10 @@ package com.web.pocketmoney.entity.room;
 import com.web.pocketmoney.entity.user.User;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -38,5 +40,18 @@ public interface ChatRoomRepository extends JpaRepository<ChatRoom,Long> {
     List<ChatRoom> findByRoomNameContaining(Sort sort, @Param("roomName") String roomName, @Param("userId") User userId);
 
 //    Optional<ChatRoom> findById(Long id);
+
+    @Transactional // Update, Delete문은 붙여줘야함
+    @Modifying // select 문이 아님을 나타냄
+    @Query("update ChatRoom cr set cr.employeeId = NULL" +
+            " where cr.id = :chatId")
+    void deleteEmployee(@Param("chatId") Long chatId);
+
+    @Transactional // Update, Delete문은 붙여줘야함
+    @Modifying // select 문이 아님을 나타냄
+    @Query("update ChatRoom cr set cr.employerId = NULL" +
+            " where cr.id = :chatId")
+    void deleteEmployer(@Param("chatId") Long chatId);
+
 
 }
