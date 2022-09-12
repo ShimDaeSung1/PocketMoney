@@ -54,9 +54,9 @@ public class WishController {
         return ResponseEntity.noContent().build();
     }
 
-    @DeleteMapping("/{id}") //RequestMapping("/wish")
-    public ResponseEntity<DefaultRes> remove(@PathVariable("id")Long id, @AuthenticationPrincipal User user){
-        wishService.remove(id, user.getId());
+    @DeleteMapping("/{boardId}") //RequestMapping("/wish")
+    public ResponseEntity<DefaultRes> remove(@PathVariable("boardId")Long boardId, @AuthenticationPrincipal User user){
+        wishService.remove(boardId, user.getId());
 
 //        return ResponseEntity.ok()
 //                .body(DefaultRes.res(StatusCode.NO_CONTENT, "관심 구인글 해제 완료!"));

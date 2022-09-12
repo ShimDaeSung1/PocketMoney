@@ -1,5 +1,6 @@
 package com.web.pocketmoney.entity.wish;
 
+import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.user.User;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -18,8 +19,12 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
             " where w.userId = : userId")
     Object getWishByUserId(@Param("userId") Long userId);
 
-    @Query("select w from Wish w where w.userId = userId and w.boardId = boardId")
+    @Query("select w from Wish w where w.userId = :userId and w.boardId = :boardId")
     Optional<Wish> findByUserIdAndBoardId(@Param("userId") Long userId, @Param("boardId") Long boardId);
+
+    @Query("select w from Wish w where w.userId = :userId and w.boardId = :boardId")
+    Optional<Wish> findByUserIdAndBoardId2(@Param("userId") User userId, @Param("boardId") Board boardId);
+
 //    @Query("select w, b.title, u.email " +
 //            " from Wish w left join Board b on b.id = w" +
 //            " left join User u" +
