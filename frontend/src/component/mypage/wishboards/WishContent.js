@@ -16,10 +16,10 @@ const WishContent = (props) => {
   return (
     <WishContentStyle
       onClick={() => {
-        props.navigate();
+        props.navigate("/board/" + props.wish.boardId);
       }}
     >
-      {props.wish.name}
+      {props.wish.title}
     </WishContentStyle>
   );
 };

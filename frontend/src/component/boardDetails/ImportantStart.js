@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import addBoardWishApi from "./../../api/board/AddBoardWishApi";
 
 const WishStart = styled.div`
   display: inline-block;
@@ -13,17 +14,21 @@ const WishStart = styled.div`
   cursor: pointer;
 `;
 const ImportantStart = (props) => {
-  const color = props.wish ? "#ffd400" : "#afafaf";
+  let color = props.wish ? "#ffd400" : "#afafaf";
 
+  const changeWish = () => {
+    if (!props.wish) {
+      addBoardWishApi(props.accesstoken, props.boardId);
+      props.setWish(!props.wish);
+      color = "#ffd400";
+    }
+  };
   return (
     <WishStart
       style={{
         color: color,
       }}
-      // onClick={() => {
-      //     changeBoardWishApi(props.wish, props.accesstoken)
-      //   props.setWish(!wish)
-      // }}
+      onClick={() => changeWish()}
     >
       ★
     </WishStart>

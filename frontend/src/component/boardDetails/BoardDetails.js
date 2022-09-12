@@ -115,7 +115,6 @@ const BoardDetails = () => {
       deleteBoardApi(boardId, accesstoken, navigate);
     }
   };
-
   return (
     <>
       <MainHeader />
@@ -125,12 +124,6 @@ const BoardDetails = () => {
           {data ? (
             data.isUser === "USER" ? (
               <>
-                <ImportantStart
-                  data={data}
-                  accesstoken={accesstoken}
-                  wish={wish}
-                  setWish={setWish}
-                />
                 <EditButton
                   onClick={() => {
                     navigate("/board/write/modify/" + boardId, {
@@ -147,7 +140,7 @@ const BoardDetails = () => {
             ) : data.isUser === "NOTUSER" ? (
               <React.Fragment>
                 <ImportantStart
-                  data={data}
+                  boardId={boardId}
                   accesstoken={accesstoken}
                   wish={wish}
                   setWish={setWish}

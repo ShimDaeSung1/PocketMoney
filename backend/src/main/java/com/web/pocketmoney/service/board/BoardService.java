@@ -144,6 +144,7 @@ public class BoardService {
         }
         else if(user.getId() != board.getUser().getId()) {
             Wish isWish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId()).orElse(null);
+
             if(isWish != null) {
                 wish = true;
             }
