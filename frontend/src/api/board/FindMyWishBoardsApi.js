@@ -1,18 +1,20 @@
 import axios from "axios";
 import { BACKEND_ADDRESS } from "./../../constant/ADDRESS";
 
-function findLocalBoardListApi(city, accesstoken, num) {
+function findMyWishBoardApi(accesstoken) {
   const config = {
     headers: {
       "X-AUTH-TOKEN": accesstoken,
     },
   };
   return axios
-    .get(BACKEND_ADDRESS + "boards/listCity/" + num + "?search=" + city, config)
+    .get(BACKEND_ADDRESS + "/wish/list", config)
     .then((response) => response.data)
     .catch((error) => {
-      alert(error.response.data.message);
+      if (error.response.status === 404) {
+        return null;
+      }
     });
 }
 
-export default findLocalBoardListApi;
+export default findMyWishBoardApi;

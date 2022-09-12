@@ -4,8 +4,8 @@ const Outside = styled.div`
   width: 800px;
   height: 70px;
   line-height: 150px;
-  border-top: 1px solid blue;
-  border-bottom: 1px solid blue;
+  border-top: 1px solid rgb(200, 200, 200);
+  border-bottom: 1px solid rgb(200, 200, 200);
 `;
 const TitleInput = styled.input`
   display: block;

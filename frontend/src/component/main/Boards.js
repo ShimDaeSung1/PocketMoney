@@ -39,6 +39,8 @@ const Location = styled.div`
 `;
 
 function Boards(props) {
+  const imgurl =
+    "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
   return (
     <>
       <BoardList>
@@ -53,7 +55,7 @@ function Boards(props) {
                 >
                   <ImgBox>
                     <img
-                      src="https://pocketdon.s3.ap-northeast-2.amazonaws.com/board/85e6dc2d-1666-43c4-94b0-1484cdd9ba2atestlogo.JPG"
+                      src={board.filePath ? board.filePath : imgurl}
                       alt="my image"
                       style={{
                         width: "250px",

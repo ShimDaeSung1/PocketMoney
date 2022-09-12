@@ -29,6 +29,7 @@ function App() {
           element={<BoardWrite />}
         />
         <Route path="/chat" exact element={<ChatPage />} />
+        <Route path="/chat/:id" exact element={<ChatPage />} />
         <Route path="/login/kakao" exact element={<KakaoLoginHandler />} />
       </Routes>
     </Router>

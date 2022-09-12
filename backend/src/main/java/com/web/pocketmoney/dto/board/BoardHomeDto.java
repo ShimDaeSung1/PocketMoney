@@ -17,8 +17,9 @@ public class BoardHomeDto {
     //  private String nickName;
     private Long boardId;
     private LocalDateTime wantedTime;
+    private String filePath;
 
-    public BoardHomeDto(String title, int pay, String city, int view, Timestamp createTime, Long boardId, LocalDateTime wantedTime) {
+    public BoardHomeDto(String title, int pay, String city, int view, Timestamp createTime, Long boardId, LocalDateTime wantedTime, String filePath) {
         this.title = title;
         this.pay = pay;
         this.city = city;
@@ -26,5 +27,6 @@ public class BoardHomeDto {
         this.createTime = createTime;
         this.boardId = boardId;
         this.wantedTime = wantedTime;
+        this.filePath = filePath;
     }
 }

@@ -144,6 +144,7 @@ public class BoardService {
         }
         else if(user.getId() != board.getUser().getId()) {
             Wish isWish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId()).orElse(null);
+
             if(isWish != null) {
                 wish = true;
             }
@@ -169,6 +170,7 @@ public class BoardService {
                 .isUser(state)
                 .filePath(board.getFilePath())
                 .wish(wish)
+                .kindeScore(board.getUser().getKindScore())
         .build();
     }
 

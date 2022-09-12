@@ -17,10 +17,9 @@ const ChatButton = styled.div`
   height: 50px;
   font-size: 35px;
   text-align: center;
-  background-color: pink;
+  background-color: rgb(24, 191, 230);
   border-radius: 100px;
   cursor: pointer;
-  border: 5px solid red;
 `;
 const EditMyInfoButton = styled.div`
   position: absolute;
@@ -30,10 +29,9 @@ const EditMyInfoButton = styled.div`
   height: 50px;
   font-size: 35px;
   text-align: center;
-  background-color: pink;
+  background-color: rgb(24, 191, 230);
   border-radius: 100px;
   cursor: pointer;
-  border: 5px solid red;
 `;
 
 const KindScore = styled.div`
@@ -44,9 +42,8 @@ const KindScore = styled.div`
   height: 40px;
   font-size: 25px;
   text-align: center;
-  background-color: lightYellow;
+  background-color: rgb(24, 191, 230);
   border-radius: 100px;
-  border: 5px solid yellow;
 `;
 const DeleteUser = styled.div`
   position: absolute;

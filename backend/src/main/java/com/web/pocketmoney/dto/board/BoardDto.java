@@ -22,5 +22,6 @@ public class BoardDto {
     private UserState isUser;
     private String filePath;
     private Boolean wish;
+    private Long kindeScore;
     //private int isUser; //
 }
