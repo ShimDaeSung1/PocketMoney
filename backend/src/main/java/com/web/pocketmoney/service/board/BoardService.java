@@ -169,6 +169,7 @@ public class BoardService {
                 .isUser(state)
                 .filePath(board.getFilePath())
                 .wish(wish)
+                .kindeScore(board.getUser().getKindScore())
         .build();
     }
 
