@@ -106,7 +106,7 @@ public class UserController {
         Long id1 = chatRoom.getEmployeeId().getId();
         Long id2 = chatRoom.getEmployerId().getId();
         if((userId == id1 && kindScoreDTO.getUserId() == id2) || (userId == id2 && kindScoreDTO.getUserId() == id1)){
-            userService.kindScore(kindScoreDTO.isTf(), kindScoreDTO.getUserId());
+            userService.kindScore(kindScoreDTO.isTf(), kindScoreDTO.getUserId(), userId);
         }else{
             throw new CUserNotFoundException("권한이 없습니다.", ErrorCode.FORBIDDEN);
         }

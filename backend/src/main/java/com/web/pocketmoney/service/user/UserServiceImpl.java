@@ -2,6 +2,7 @@ package com.web.pocketmoney.service.user;
 
 import com.web.pocketmoney.config.security.JwtTokenProvider;
 import com.web.pocketmoney.dto.user.*;
+import com.web.pocketmoney.entity.like.LikeRepository;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.entity.user.UserRepository;
 import com.web.pocketmoney.exception.*;
@@ -25,11 +26,12 @@ public class UserServiceImpl implements UserService{
     private final JwtTokenProvider jwtTokenProvider; // jwt 토큰 생성
     private final ResponseService responseService; // API 요청 결과에 대한 code, message
     private final PasswordEncoder encoder; // 비밀번호 암호화
+    private final LikeRepository likeRepository;
 
 
     // tf를 확인해서 true면 카인드스코어 +1, false면 카인드스코어 -1
     @Override
-    public void kindScore(boolean tf, Long id) {
+    public void kindScore(boolean tf, Long id, Long me) {
         User user = userRepository.findById(id)
                 .orElseThrow(()-> new CUserNotFoundException(
                         "존재하지 않는 회원입니다.", ErrorCode.NOT_FOUND
@@ -40,9 +42,11 @@ public class UserServiceImpl implements UserService{
         if(tf == true){
             userRepository.plusKindScore(user.getId());
             log.info("true 실행");
+            likeRepository.plus(user.getId(), me);
         }else{
             userRepository.minusKindScore(user.getId());
             log.info("false 실행");
+            likeRepository.minus(user.getId(), me);
         }
     }
 

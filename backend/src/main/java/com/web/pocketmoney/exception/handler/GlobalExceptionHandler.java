@@ -19,6 +19,13 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
     }
 
+    @ExceptionHandler(CLikeNotFoundException.class)
+    public ResponseEntity<ErrorResponse> handleCLikeNotFoundException(CLikeNotFoundException ex){
+        ErrorResponse response = new ErrorResponse(ex.getErrorCode());
+        response.setMessage(ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.valueOf(ex.getErrorCode().getStatus()));
+    }
+
     @ExceptionHandler(CBoardNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleCBoardNotFoundException(CBoardNotFoundException ex){
         log.error("handleUserNotFoundException", ex);

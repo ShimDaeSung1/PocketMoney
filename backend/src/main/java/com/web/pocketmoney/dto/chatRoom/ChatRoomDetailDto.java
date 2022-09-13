@@ -25,6 +25,9 @@ public class ChatRoomDetailDto {
     private Long userId;
     private String nickName;
 
+    //상대방유저를 좋아요 눌렀는지 여부
+    private boolean like;
+
     private List<MessageDetailDto> messageDetailDtoList;
 
 //    public static ChatRoomDetailDto toChatRoomDetailDto(ChatRoom chatRoom){

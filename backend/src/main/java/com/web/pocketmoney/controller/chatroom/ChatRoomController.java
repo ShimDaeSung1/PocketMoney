@@ -7,6 +7,7 @@ import com.web.pocketmoney.dto.chatRoom.ChatRoomListDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomRequestDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomSaveDto;
 import com.web.pocketmoney.entity.user.User;
+import com.web.pocketmoney.service.like.LikeService;
 import com.web.pocketmoney.service.user.UserService;
 import com.web.pocketmoney.service.room.ChatRoomService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
     private final UserService userService;
+    private final LikeService likeService;
 
     //모든 채팅방 불러오기
     @GetMapping("/list") //RequestMapping("/room")

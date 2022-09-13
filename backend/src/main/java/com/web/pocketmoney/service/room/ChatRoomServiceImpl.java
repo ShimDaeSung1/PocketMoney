@@ -4,20 +4,21 @@ import com.web.pocketmoney.dto.chatRoom.ChatRoomDetailDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomListDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomRequestDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomSaveDto;
+import com.web.pocketmoney.dto.like.InsertLikeDTO;
 import com.web.pocketmoney.dto.message.MessageDetailDto;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.board.BoardRepository;
+import com.web.pocketmoney.entity.like.Like;
+import com.web.pocketmoney.entity.like.LikeRepository;
 import com.web.pocketmoney.entity.message.Message;
 import com.web.pocketmoney.entity.message.MessageRepository;
 import com.web.pocketmoney.entity.room.ChatRoom;
 import com.web.pocketmoney.entity.room.ChatRoomRepository;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.entity.user.UserRepository;
-import com.web.pocketmoney.exception.CBoardNotFoundException;
-import com.web.pocketmoney.exception.CUserNotFoundException;
-import com.web.pocketmoney.exception.ChatRoomExistsException;
-import com.web.pocketmoney.exception.ChatRoomNotFoundException;
+import com.web.pocketmoney.exception.*;
 import com.web.pocketmoney.exception.handler.ErrorCode;
+import com.web.pocketmoney.service.like.LikeService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Sort;
@@ -37,11 +38,14 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     private final MessageRepository cr;
     private final BoardRepository boardRepository;
     private final UserRepository userRepository;
+    private final LikeRepository likeRepository;
+
+    private final LikeService likeService;
 
     //채팅방 전체보기
     @Override
     public List<ChatRoomListDto> findAllRooms(Long userId) {
-
+        //현재 로그인한 자신 user
         User user = userRepository.findById(userId).orElseThrow(()->
                 new CUserNotFoundException("해당 유저를 찾을 수 없습니다.", ErrorCode.FORBIDDEN));
 
@@ -59,6 +63,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     //채팅방 id로 채팅방 찾기
     @Override
     public ChatRoomDetailDto findRoomById(Long id, Long userId) {
+        //chatId, 로그인한 사용자 아이디 순으로 받아옴
 
         ChatRoom chatRoom = crr.findById(id)
                 .orElseThrow(() -> new ChatRoomNotFoundException(
@@ -108,6 +113,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
                 .employerId(board.getUser().getId())
                 .build();
 
+        //채팅방 개설시 서로가 좋아요를 아직 안 누른상태로 DB 삽입
+        InsertLikeDTO insertLikeDTO = InsertLikeDTO.builder()
+                .userId(chatRoomSaveDto.getEmployeeId())
+                .likedId(chatRoomSaveDto.getEmployerId())
+                .liked(false)
+                .build();
+
+        InsertLikeDTO insertLikeDTO1 = InsertLikeDTO.builder()
+                .userId(chatRoomSaveDto.getEmployerId())
+                .likedId(chatRoomSaveDto.getEmployeeId())
+                .liked(false)
+                .build();
+
+        likeService.insertLike(insertLikeDTO);
+        likeService.insertLike(insertLikeDTO1);
 
 
         ChatRoom chatRoom = chatRoomSaveDtoToEntity(chatRoomSaveDto);
@@ -145,10 +165,10 @@ public class ChatRoomServiceImpl implements ChatRoomService {
 //    }
 //채팅방 여러개 불러올 때
     ChatRoomListDto entityToDto(ChatRoom chatRoom, User user){
-
     //상대방 이름 뽑아내기
     String nickName;
     Long userId;
+    //user는 현재 로그인 사용자
     //사용자 아이디가 구직자 아이디일경우, 상대방 닉네임은 구인자 닉네임
     if (user.getId().equals(chatRoom.getEmployeeId().getId())) {
        User user1 = userRepository.findById(chatRoom.getEmployerId().getId()).orElseThrow(()->
@@ -162,10 +182,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         userId = user1.getId();
     }
 
+    Like liked = likeRepository.findByMeAndLikedId(userId, user.getId())
+            .orElseThrow(() ->
+                    new CLikeNotFoundException("좋아요를 누를 권한이 없습니다.",ErrorCode.FORBIDDEN));
+
     ChatRoomListDto chatRoomListDto = ChatRoomListDto.builder()
             .nickName(nickName)
             .id(chatRoom.getId())
             .regDate(chatRoom.getRegDate())
+            .like(liked.isLike())
             .name(chatRoom.getRoomName())
             .userId(userId)
             .build();
@@ -188,6 +213,9 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             opponentId = user1.getId();
         }
 
+        Like liked = likeRepository.findByMeAndLikedId(opponentId, userId)
+                .orElseThrow(() -> new CLikeNotFoundException("좋아요를 누를 권한이 없습니다.", ErrorCode.FORBIDDEN));
+
 
         User employee = User.builder()
                 .id(chatRoom.getEmployeeId().getId())
@@ -200,6 +228,7 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoomDetailDto chatRoomDetailDto = ChatRoomDetailDto.builder()
                 .id(chatRoom.getId())
                 .name(chatRoom.getRoomName())
+                .like(liked.isLike())
                 .nickName(nickName)
                 .userId(opponentId)
                 .regDate(chatRoom.getRegDate())
