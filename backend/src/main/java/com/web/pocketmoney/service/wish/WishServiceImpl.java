@@ -48,11 +48,19 @@ public class WishServiceImpl implements WishService{
     }
 
     @Override
-    public void remove(Long id, Long userId) {
+    public void remove(Long boardId, Long userId) {
 
+        Board board = boardRepository.findById(boardId)
+                .orElseThrow(() -> new CBoardNotFoundException(
+                        "게시글이 존재하지 않습니다.", ErrorCode.FORBIDDEN
+                ));
 
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new CUserNotFoundException(
+                        "사용자가 존재하지 않습니다.", ErrorCode.FORBIDDEN
+                ));
 
-        Wish wish = wishRepository.findById(id)
+        Wish wish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId())
                 .orElseThrow(() -> new CWishNotFoundException(
                         "관심글이 존재하지 않습니다..", ErrorCode.FORBIDDEN
                 ));

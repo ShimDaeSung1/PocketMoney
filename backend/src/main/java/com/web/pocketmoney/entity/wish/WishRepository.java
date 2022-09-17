@@ -18,7 +18,7 @@ public interface WishRepository extends JpaRepository<Wish, Long> {
             " where w.userId = : userId")
     Object getWishByUserId(@Param("userId") Long userId);
 
-    @Query("select w from Wish w where w.userId = userId and w.boardId = boardId")
+    @Query("select w from Wish w where w.userId.id = :userId and w.boardId.id = :boardId")
     Optional<Wish> findByUserIdAndBoardId(@Param("userId") Long userId, @Param("boardId") Long boardId);
 //    @Query("select w, b.title, u.email " +
 //            " from Wish w left join Board b on b.id = w" +
