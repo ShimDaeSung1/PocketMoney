@@ -72,5 +72,6 @@ public class MessageServiceImpl implements MessageService{
                 .message(message.getMessage())
                 .build();
         return messageDetailDto;
+
     }
 }
