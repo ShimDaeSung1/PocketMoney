@@ -13,5 +13,5 @@ public class LikeDTO {
     
     //상대방 유저 아이디와 좋아요여부
     private Long likeId;
-    private boolean like;
+    private String like;
 }

@@ -10,6 +10,6 @@ public class InsertLikeDTO {
 
     private Long userId;
     private Long likedId;
-    private boolean liked;
+    private String liked;
 
 }

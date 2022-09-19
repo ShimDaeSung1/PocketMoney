@@ -24,7 +24,7 @@ public class ChatRoomListDto {
     private String nickName;
 
     //상대방 좋아요 체크 여부
-    private boolean like;
+    private String like;
 
 
 

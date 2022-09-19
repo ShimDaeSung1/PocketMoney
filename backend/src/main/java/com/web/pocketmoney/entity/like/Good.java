@@ -13,7 +13,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-public class Like {
+public class Good {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -29,7 +29,8 @@ public class Like {
     @JsonIgnore
     private User likedId;
 
-    @Convert(converter = BooleanToYNConverter.class)
-    private boolean like;
+//    @Convert(converter = BooleanToYNConverter.class)
+    @Column(nullable = false, length = 10)
+    private String trueOrFalse;
 
 }

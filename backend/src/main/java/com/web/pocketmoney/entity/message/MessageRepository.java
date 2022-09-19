@@ -16,7 +16,7 @@ public interface MessageRepository extends JpaRepository<Message, Long> {
 //    @Modifying
 //    @Query("UPDATE Message mg set mg.status = :status WHERE mg.senderId = :senderId and mg.recipientId = :recipientId ")
 //    Message updateStatus(Long senderId, Long recipientId, MessageStatus status);
-    @Query(value = "select m" +
-            " from Message where m.chatRoom = :id", nativeQuery = true)
+    @Query(value = "select" +
+            " from Message m where m.chatRoom = :id", nativeQuery = true)
     List<Message> findAllByChatRoom_RoomId(@Param("id") Long id);
 }

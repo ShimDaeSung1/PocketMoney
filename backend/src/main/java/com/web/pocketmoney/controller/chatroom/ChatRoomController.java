@@ -6,6 +6,7 @@ import com.web.pocketmoney.dto.chatRoom.ChatRoomDetailDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomListDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomRequestDto;
 import com.web.pocketmoney.dto.chatRoom.ChatRoomSaveDto;
+import com.web.pocketmoney.entity.like.GoodRepository;
 import com.web.pocketmoney.entity.user.User;
 import com.web.pocketmoney.service.like.LikeService;
 import com.web.pocketmoney.service.user.UserService;

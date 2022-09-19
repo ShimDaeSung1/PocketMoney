@@ -105,6 +105,11 @@ public class UserController {
                         );
         Long id1 = chatRoom.getEmployeeId().getId();
         Long id2 = chatRoom.getEmployerId().getId();
+        log.info("logged user : "+userId);
+        log.info("상대방 아이디 : " + kindScoreDTO.getUserId());
+        log.info("고용주 아이디 : " + id2);
+        log.info("구직자 아이디 : " + id1);
+
         if((userId == id1 && kindScoreDTO.getUserId() == id2) || (userId == id2 && kindScoreDTO.getUserId() == id1)){
             userService.kindScore(kindScoreDTO.isTf(), kindScoreDTO.getUserId(), userId);
         }else{

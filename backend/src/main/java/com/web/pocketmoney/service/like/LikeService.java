@@ -2,7 +2,8 @@ package com.web.pocketmoney.service.like;
 
 import com.web.pocketmoney.dto.like.InsertLikeDTO;
 import com.web.pocketmoney.dto.like.LikeDTO;
-import com.web.pocketmoney.entity.like.Like;
+import com.web.pocketmoney.entity.like.Good;
+//import com.web.pocketmoney.entity.like.Like;
 import com.web.pocketmoney.entity.user.User;
 
 public interface LikeService {
@@ -10,7 +11,7 @@ public interface LikeService {
     void insertLike(InsertLikeDTO insertLikeDTO);
 
     //채팅방 삽입시에 자동으로 생성되는것 이므로 like는 항상false
-    default Like dtoToEntity(InsertLikeDTO insertLikeDTO){
+    default Good dtoToEntity(InsertLikeDTO insertLikeDTO){
         //자신의 아이디
         User me = User.builder()
                 .id(insertLikeDTO.getUserId())
@@ -20,20 +21,20 @@ public interface LikeService {
                 .id(insertLikeDTO.getLikedId())
                 .build();
 
-        Like like = Like.builder()
+        Good like = Good.builder()
                 .userId(me)
                 .likedId(likedUser)
-                .like(false)
+                .trueOrFalse("false")
                 .build();
 
         return like;
     }
 
-    default LikeDTO entityToDTO(Like like){
+    default LikeDTO entityToDTO(Good like){
 
         LikeDTO likeDTO = LikeDTO.builder()
                 .likeId(like.getLikedId().getId())
-                .like(like.isLike())
+                .like(like.getTrueOrFalse())
                 .build();
 
         return likeDTO;
