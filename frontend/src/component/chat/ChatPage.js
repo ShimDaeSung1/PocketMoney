@@ -31,7 +31,7 @@ function ChatPage() {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState();
   const [username, setUsername] = useState();
-
+  console.log(roomList);
   useEffect(() => {
     findChattingListApi(accesstoken).then((resp) => {
       setRoomList(resp);
