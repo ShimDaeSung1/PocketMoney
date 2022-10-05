@@ -29,7 +29,7 @@ public class MessageServiceImpl implements MessageService{
 
     @Override
     public List<MessageDetailDto> findAllChatByRoomId(Long id, Long userId) {
-
+        log.info("chatRoom Id :: "+id);
         ChatRoom chatRoom =  chatRoomRepository.findById(id)
                 .orElseThrow(() -> new ChatRoomNotFoundException(
                         "찾는 방이 없습니다.", ErrorCode.FORBIDDEN
@@ -72,5 +72,6 @@ public class MessageServiceImpl implements MessageService{
                 .message(message.getMessage())
                 .build();
         return messageDetailDto;
+
     }
 }

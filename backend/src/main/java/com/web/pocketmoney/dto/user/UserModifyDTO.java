@@ -15,10 +15,10 @@ import java.util.List;
 public class UserModifyDTO {
 
     //현재 비밀번호 맞는지 확인
-    private String currentPassword;
+//    private String currentPassword;
 
     //새로운 비밀번호
-    private String newPassword;
+//    private String newPassword;
 
     private String sex;
 

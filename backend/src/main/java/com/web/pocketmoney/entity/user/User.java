@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.web.pocketmoney.entity.base.BaseEntity;
 import com.web.pocketmoney.entity.board.Board;
 import com.web.pocketmoney.entity.comment.Comment;
+import com.web.pocketmoney.entity.like.Good;
 import com.web.pocketmoney.entity.role.UserRole;
 import com.web.pocketmoney.entity.room.ChatRoom;
 import com.web.pocketmoney.entity.wish.Wish;
@@ -78,6 +79,12 @@ public class User implements UserDetails {
 
     @OneToMany(mappedBy = "userId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Good> likes = new ArrayList<>();
+
+    @OneToMany(mappedBy = "likedId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Good> likes2 = new ArrayList<>();
 
     //@CreationTimestamp // INSERT 시 자동으로 값을 채워줌
     //@Column(name = "created_at")

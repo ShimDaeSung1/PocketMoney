@@ -23,6 +23,8 @@ public class ChatRoomListDto {
     private Long userId;
     private String nickName;
 
+    //상대방 좋아요 체크 여부
+    private String like;
 
 
 
