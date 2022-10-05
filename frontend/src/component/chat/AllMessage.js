@@ -122,11 +122,11 @@ function AllMessage(props) {
                 </LatestDate>
                 <Like
                   onClick={() => {
-                    changeLikeApi(room.id, room.userId, true, accesstoken);
+                    changeLikeApi(room.id, room.userId, room.like, accesstoken);
                     alert("gdgd");
                   }}
                 >
-                  {room.like === "true" ? "♥" : "♡"}
+                  {room.like ? (room.like === "true" ? "♥" : "♡") : ""}
                 </Like>
               </Message>
             );

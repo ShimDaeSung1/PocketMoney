@@ -10,7 +10,7 @@ function changeLikeApi(chatId, userId, like, accesstoken) {
   const body = {
     chatId: chatId,
     userId: userId,
-    tf: like,
+    tf: like === "true" ? false : true,
   };
   return axios
     .put(BACKEND_ADDRESS + "/user/kindscore", body, config)
