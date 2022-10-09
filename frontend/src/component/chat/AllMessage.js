@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { ACCESS_TOKEN } from "./../../constant/LocalStorage";
 import searchchatRoomApi from "./../../api/chat/SearchChatRoomApi";
+import changeLikeApi from "./../../api/chat/ChangeLikeApi";
 
 const Outside = styled.div`
   width: 350px;
@@ -43,11 +44,24 @@ const User = styled.div`
   color: blue;
 `;
 const LatestDate = styled.div`
+  display: inline-block;
   width: 200px;
   height: 20px;
   color: gray;
   font-size: 15px;
 `;
+const Like = styled.div`
+  display: inline-block;
+  margin-left: 95px;
+  padding-left: 10px;
+  margin-top: -20px;
+  width: 30px;
+  height: 35px;
+  color: red;
+  font-size: 40px;
+  cursor: pointer;
+`;
+
 function AllMessage(props) {
   const accesstoken = sessionStorage.getItem(ACCESS_TOKEN);
   const [sword, setSword] = useState("");
@@ -71,6 +85,7 @@ function AllMessage(props) {
   function selectOneChatRoom(id) {
     window.location.href = "/chat/" + id;
   }
+
   return (
     <Outside>
       <Search>
@@ -94,8 +109,9 @@ function AllMessage(props) {
         </Serachsubmit>
       </Search>
       {props.roomList
-        ? props.roomList.map((room) => {
+        ? props.roomList.map((room, idx) => {
             let date = new Date(room.regDate);
+
             return (
               <Message onClick={() => selectOneChatRoom(room.id)}>
                 <Title>{room.name}</Title>
@@ -104,6 +120,23 @@ function AllMessage(props) {
                   {date.getYear() + 1900}년 {date.getMonth()}월 {date.getDay()}
                   일 {date.getHours()}시 {date.getMinutes()}분
                 </LatestDate>
+                {room.like !== "Unusalble" ? (
+                  <Like
+                    onClick={() => {
+                      changeLikeApi(
+                        room.id,
+                        room.userId,
+                        room.like,
+                        accesstoken
+                      );
+                      alert("gdgd");
+                    }}
+                  >
+                    {room.like === "true" ? "♥" : "♡"}
+                  </Like>
+                ) : (
+                  ""
+                )}
               </Message>
             );
           })

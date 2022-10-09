@@ -60,7 +60,7 @@ public class WishServiceImpl implements WishService{
                         "사용자가 존재하지 않습니다.", ErrorCode.FORBIDDEN
                 ));
 
-        Wish wish = wishRepository.findByUserIdAndBoardId2(user, board)
+        Wish wish = wishRepository.findByUserIdAndBoardId(user.getId(), board.getId())
                 .orElseThrow(() -> new CWishNotFoundException(
                         "관심글이 존재하지 않습니다..", ErrorCode.FORBIDDEN
                 ));

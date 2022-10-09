@@ -6,16 +6,13 @@ function deleteBoardWishApi(accesstoken, boardId) {
     alert("로그인이 필요한 서비스입니다.");
     return Promise.reject("토큰이 없음");
   }
-  const body = {
-    boardId: boardId,
-  };
   const config = {
     headers: {
       "X-AUTH-TOKEN": accesstoken,
     },
   };
   axios
-    .post(BACKEND_ADDRESS + "/wish", body, config)
+    .delete(BACKEND_ADDRESS + "/wish/" + boardId, config)
     .then((response) => {
       if (response.status === 204) {
         return true;

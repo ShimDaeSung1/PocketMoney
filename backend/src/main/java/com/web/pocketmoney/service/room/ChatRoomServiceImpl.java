@@ -213,27 +213,45 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     ChatRoomListDto chatRoomListDto;
     //user는 현재 로그인 사용자
     //사용자 아이디가 구직자 아이디일경우, 상대방 닉네임은 구인자 닉네임
-    if (user.getId().equals(chatRoom.getEmployeeId().getId())) {
-        if (chatRoom.getEmployerId() == null){
+        if (!chatRoom.existsUser()){
             nickName = "퇴장한 사용자";
             userId = user.getId();//상대방 퇴장시 상대방 id도 내 id로 바꿔버림
-        }else{
+        } else if (user.getId().equals(chatRoom.getEmployeeId().getId())){
             User user1 = userRepository.findById(chatRoom.getEmployerId().getId()).orElseThrow(()->
                     new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
             nickName = user1.getNickName();
             userId = user1.getId();
-        }
-    }else{
-        if (chatRoom.getEmployeeId() == null){
-            nickName = "퇴장한 사용자";
-            userId = user.getId();
-        }else{
+        } else {
             User user1 = userRepository.findById(chatRoom.getEmployeeId().getId()).orElseThrow(()->
                     new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
             nickName = user1.getNickName();
             userId = user1.getId();
         }
-    }
+
+
+
+
+//    if (user.getId().equals(chatRoom.getEmployeeId().getId())) {
+//        if (chatRoom.getEmployerId() == null){
+//            nickName = "퇴장한 사용자";
+//            userId = user.getId();//상대방 퇴장시 상대방 id도 내 id로 바꿔버림
+//        }else{
+//            User user1 = userRepository.findById(chatRoom.getEmployerId().getId()).orElseThrow(()->
+//                    new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
+//            nickName = user1.getNickName();
+//            userId = user1.getId();
+//        }
+//    }else{
+//        if (chatRoom.getEmployeeId() == null){
+//            nickName = "퇴장한 사용자";
+//            userId = user.getId();
+//        }else{
+//            User user1 = userRepository.findById(chatRoom.getEmployeeId().getId()).orElseThrow(()->
+//                    new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
+//            nickName = user1.getNickName();
+//            userId = user1.getId();
+//        }
+//    }
     User likedId = userRepository.findById(userId)
             .orElseThrow(() -> new CUserNotFoundException(
                     "유저를 찾을 수 없습니다.", ErrorCode.NOT_FOUND

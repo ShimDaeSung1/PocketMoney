@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import addBoardWishApi from "./../../api/board/AddBoardWishApi";
+import deleteBoardWishApi from "./../../api/board/DeleteBoardWishApi";
 
 const WishStart = styled.div`
   display: inline-block;
@@ -21,6 +22,10 @@ const ImportantStart = (props) => {
       addBoardWishApi(props.accesstoken, props.boardId);
       props.setWish(!props.wish);
       color = "#ffd400";
+    } else {
+      deleteBoardWishApi(props.accesstoken, props.boardId);
+      props.setWish(!props.wish);
+      color = "#afafaf";
     }
   };
   return (
