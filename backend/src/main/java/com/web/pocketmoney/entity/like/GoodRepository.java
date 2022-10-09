@@ -23,10 +23,10 @@ public interface GoodRepository extends JpaRepository<Good, Long> {
 
     @Transactional // Update, Delete문은 붙여줘야함
     @Modifying // select 문이 아님을 나타냄
-    @Query(value = "UPDATE Good l SET l.like = :f" +
-            " where l.userId = :me" +
-            " and l.likedId = :likedId"
-    , nativeQuery = true)
+    @Query(value = "UPDATE Good SET true_or_false = :f" +
+            " where user_id_id = :me" +
+            " and liked_id_id = :likedId"
+            , nativeQuery = true)
     void minus(@Param("likedId") User likedId, @Param("me") User me, @Param("f") String f);
 
     @Query(value = "select l from Good l where l.userId = :me and l.likedId = :likedId")

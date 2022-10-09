@@ -15,7 +15,7 @@ function deleteChatRoomApi(roomId, accesstoken) {
     .delete(BACKEND_ADDRESS + "/room/" + roomId, config)
     .then((response) => {
       if (response.status === 204) {
-        alert("댓글이 삭제되었습니다 :)");
+        alert("채팅방이 삭제되었습니다 :)");
         window.location.href = "/chat";
       }
     })

@@ -65,6 +65,12 @@ public class ChatRoom {
     @JsonIgnore
     private User employerId;
 
+    public boolean existsUser(){
+        if(this.employeeId != null)
+            return true;
+        else
+            return false;
+    }
     @ManyToOne
     @JoinColumn
     @JsonIgnore

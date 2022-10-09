@@ -120,14 +120,23 @@ function AllMessage(props) {
                   {date.getYear() + 1900}년 {date.getMonth()}월 {date.getDay()}
                   일 {date.getHours()}시 {date.getMinutes()}분
                 </LatestDate>
-                <Like
-                  onClick={() => {
-                    changeLikeApi(room.id, room.userId, room.like, accesstoken);
-                    alert("gdgd");
-                  }}
-                >
-                  {room.like ? (room.like === "true" ? "♥" : "♡") : ""}
-                </Like>
+                {room.like !== "Unusalble" ? (
+                  <Like
+                    onClick={() => {
+                      changeLikeApi(
+                        room.id,
+                        room.userId,
+                        room.like,
+                        accesstoken
+                      );
+                      alert("gdgd");
+                    }}
+                  >
+                    {room.like === "true" ? "♥" : "♡"}
+                  </Like>
+                ) : (
+                  ""
+                )}
               </Message>
             );
           })
