@@ -65,8 +65,14 @@ public class ChatRoom {
     @JsonIgnore
     private User employerId;
 
-    public boolean existsUser(){
+    public boolean existsEmployee(){
         if(this.employeeId != null)
+            return true;
+        else
+            return false;
+    }
+    public boolean existsEmployer(){
+        if(this.employerId != null)
             return true;
         else
             return false;

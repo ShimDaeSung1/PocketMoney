@@ -176,15 +176,38 @@ public class ChatRoomServiceImpl implements ChatRoomService {
         ChatRoom chatRoom = crr.findById(chatRoomId).orElseThrow(()->
                 new ChatRoomNotFoundException("해당 채팅방을 찾을 수 없습니다.", ErrorCode.NOT_FOUND));
         log.info("chatRoomEntity:"+chatRoom);
-        if(chatRoom.getEmployeeId() == null && chatRoom.getEmployerId() == null){
-            log.info("delete...."+chatRoomId);
-            crr.deleteById(chatRoomId);
-        }else{
-            if(chatRoom.getEmployeeId().getId() == userId){
+        //둘 다 있을경우
+        if(chatRoom.existsEmployer() == true && chatRoom.existsEmployee() == true){
+            if(userId.equals(chatRoom.getEmployeeId().getId())){
                 crr.deleteEmployee(chatRoomId);
-            }else if(chatRoom.getEmployerId().getId() == userId){
+            }else{
                 crr.deleteEmployer(chatRoomId);
             }
+        }
+        //둘 다 나갔으면 삭제
+        else{
+            // 구직자만 남았을 경우
+            if(chatRoom.existsEmployer() == false && chatRoom.existsEmployee() == true){
+                log.info("gogogo");
+                crr.deleteEmployee(chatRoomId);
+                if(chatRoom.existsEmployee() == false && chatRoom.existsEmployer() == false){
+                    log.info("delete...."+chatRoomId);
+                    crr.deleteById(chatRoomId);
+                }
+            }
+            else if(chatRoom.existsEmployee() == false && chatRoom.existsEmployer() == true){
+                log.info("gogogogo..");
+                crr.deleteEmployer(chatRoomId);
+                if(chatRoom.existsEmployee() == false && chatRoom.existsEmployer() == false){
+                    log.info("delete...."+chatRoomId);
+                    crr.deleteById(chatRoomId);
+                }
+            }
+//            if(chatRoom.getEmployeeId().getId() == userId){
+//                crr.deleteEmployee(chatRoomId);
+//            }else if(chatRoom.getEmployerId().getId() == userId){
+//                crr.deleteEmployer(chatRoomId);
+//            }
         }
         log.info("logggg"+chatRoom.getEmployerId());
         log.info("logggg"+chatRoom.getEmployeeId());
@@ -213,10 +236,15 @@ public class ChatRoomServiceImpl implements ChatRoomService {
     ChatRoomListDto chatRoomListDto;
     //user는 현재 로그인 사용자
     //사용자 아이디가 구직자 아이디일경우, 상대방 닉네임은 구인자 닉네임
-        if (!chatRoom.existsUser()){
+    // 채팅방의 구직자가 나갈경우
+        if (!chatRoom.existsEmployee()){
             nickName = "퇴장한 사용자";
             userId = user.getId();//상대방 퇴장시 상대방 id도 내 id로 바꿔버림
-        } else if (user.getId().equals(chatRoom.getEmployeeId().getId())){
+        }else if (!chatRoom.existsEmployer()){
+            nickName = "퇴장한 사용자";
+            userId = user.getId();//상대방 퇴장시 상대방 id도 내 id로 바꿔버림
+        }
+        else if (user.getId().equals(chatRoom.getEmployeeId().getId())){
             User user1 = userRepository.findById(chatRoom.getEmployerId().getId()).orElseThrow(()->
                     new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
             nickName = user1.getNickName();
@@ -227,6 +255,21 @@ public class ChatRoomServiceImpl implements ChatRoomService {
             nickName = user1.getNickName();
             userId = user1.getId();
         }
+//        if (!chatRoom.existsEmployer()){
+//            nickName = "퇴장한 사용자";
+//            userId = user.getId();//상대방 퇴장시 상대방 id도 내 id로 바꿔버림
+//        } else if (user.getId().equals(chatRoom.getEmployerId().getId())){
+//            User user1 = userRepository.findById(chatRoom.getEmployeeId().getId()).orElseThrow(()->
+//                    new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
+//            nickName = user1.getNickName();
+//            userId = user1.getId();
+//        } else {
+//            User user1 = userRepository.findById(chatRoom.getEmployerId().getId()).orElseThrow(()->
+//                    new CUserNotFoundException("해당 유저가 없습니다.", ErrorCode.FORBIDDEN));
+//            nickName = user1.getNickName();
+//            userId = user1.getId();
+//        }
+
 
 
 
