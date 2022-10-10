@@ -64,25 +64,33 @@ public class User implements UserDetails {
     @Builder.Default
     private List<String> roles = new ArrayList<>(); // 회원이 가지고 있는 권한 정보들
 
+
+    @Builder.Default
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
 //    @JoinColumn(name = "user_id")
     private List<Board> boards = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "employeeId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "employerId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ChatRoom> chatRooms2 = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "userId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Comment> comments = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "userId",fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Wish> wishes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "userId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Good> likes = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "likedId", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Good> likes2 = new ArrayList<>();
 

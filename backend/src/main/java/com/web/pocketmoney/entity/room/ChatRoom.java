@@ -78,6 +78,7 @@ public class ChatRoom {
     //주인이 아닌 쪽은 읽기만 가능하다.
     //mappedBy = 연관관계의 주인이 아니라는 뜻, 컬럼을 만들지 않음
     //일반적으로 외래키는 ManyToOne이 가지고 있으므로 연관관계의 주인은 ManyToOne으로 생각하면 됨
+    @Builder.Default
     @OneToMany(mappedBy = "chatRoom", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Message> chatMessageList = new ArrayList<>();
 

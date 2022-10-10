@@ -22,6 +22,7 @@ public class UserDTO {
 
     private Long id;
 
+    @Builder.Default
     private List<String> roleSet = new ArrayList<>();
 
     private String email;
