@@ -3,9 +3,9 @@
 
 
 ## 팀원
-- 김하연: https://github.com/gomcool17
-- 심대성: https://github.com/ShimDaeSung1
-- 김해담솔: https://github.com/khdscor
+- 김OO: https://github.com/gomcool17
+- 심OO: https://github.com/mersung
+- 김OO: https://github.com/khdscor
 
 
 ## 💻 기술 스택 & 개발 환경
